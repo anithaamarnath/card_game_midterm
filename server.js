@@ -14,6 +14,12 @@ const knex        = require("knex")(knexConfig[ENV]);
 const morgan      = require('morgan');
 const knexLogger  = require('knex-logger');
 
+const cookieSession = require('cookie-session')
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1'],
+}))
+
 // Seperated Routes for each Resource
 const usersRoutes = require("./routes/users");
 
@@ -42,6 +48,32 @@ app.use("/api/users", usersRoutes(knex));
 app.get("/", (req, res) => {
   res.render("index");
 });
+
+app.post("/newgame", (req, res) => {
+  const matchId = knex.select('match_id').from('matches').where('player_2_id', null)
+  if (!matchId) {
+    knex.insert({player_1_id: req.session.user_id, player_1_points: '0', player_2_points: '0', game_state_id: '3', last_move_time: Date.now()})
+        .into('matches')
+        .asCallback(function(err){
+          if (err){
+            console.log(err)
+          }
+          knex.destroy()
+        })
+  }
+  else {
+    knex('matches')
+      .where({match_id: matchId})
+      .update({player_2_id: req.session.user_id})
+      .asCallback(function(err){
+        if (err){
+          console.log(err)
+        }
+        knes.destroy()
+      })
+  }
+
+})
 
 app.listen(PORT, () => {
   console.log("Example app listening on port " + PORT);
