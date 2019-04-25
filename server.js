@@ -80,7 +80,7 @@ app.post("/newgame", (req, res) => {
 })
 
 app.post("/:gameId", (req, res) => {
-  const gameState = knex.select('game_state_id').from('matches').where('id', req.params.gameId)
+  const gameState = knex.select('game_state_id').from('matches').where('id', req.params.gameId)       // find the current gamestate
   const playerId = req.session.user_id
   if (playerId === knex.select('player_1_id').from('matches').where('id', req.params.gameId)) {
     const player = 'player1'
@@ -90,21 +90,21 @@ app.post("/:gameId", (req, res) => {
   }
   if (((player === 'player1') && (gameState === 1)) || (gameState === 3) || ((player === 'player1') && (gameState === 1))) {
     if (player === 'player1'){
-      knex('cards').where({match_id: req.params.gameId, card_id: req.body.card}).update(position: '5')  //update player 1 bid
+      knex('cards').where({match_id: req.params.gameId, card_id: req.body.card}).update({position: '5'})  //update player 1 bid
       if (gameState ===3) {
-        knex('matches').where({id: req.params.gameId}).update(game_state_id: '2')
+        knex('matches').where({id: req.params.gameId}).update({game_state_id: '2', last_move_time: Date.now()})                       //change gamestate to the other player
       }
       else {
-        knex('matches').where({id: req.params.gameId}).update(game_state_id: '3')
+        knex('matches').where({id: req.params.gameId}).update({game_state_id: '3', last_move_time: Date.now()})
       }
     }
     else if (player === 'player2') {
-      knex('cards').where({match_id: req.params.gameId, card_id: req.body.card}).update(position: '6')  //update player 2 bid
+      knex('cards').where({match_id: req.params.gameId, card_id: req.body.card}).update({position: '6'})  //update player 2 bid
       if (gameState ===3) {
-        knex('matches').where({id: req.params.gameId}).update(game_state_id: '1')
+        knex('matches').where({id: req.params.gameId}).update({game_state_id: '1', last_move_time: Date.now()})                        //change gamestate to the other player
       }
       else {
-        knex('matches').where({id: req.params.gameId}).update(game_state_id: '3')
+        knex('matches').where({id: req.params.gameId}).update({game_state_id: '3', last_move_time: Date.now()})
       }
     }
   }
