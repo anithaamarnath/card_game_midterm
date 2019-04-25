@@ -111,7 +111,7 @@ app.post("/:gameId", (req, res) => {
         knex('cards').where({match_id: req.params.gameId, card_id: req.body.card}).update({position: '5'}).asCallback(function(err){
           if (gameState === 3) {
             knex('matches').where({id: req.params.gameId}).update({game_state_id: '2', last_move_time: new Date()}).asCallback(function(err){
-              res.redirect(`/`)
+              newTurn(req.params.gameId)
             })                     //change gamestate to the other player
           }
           else {
@@ -125,7 +125,7 @@ app.post("/:gameId", (req, res) => {
         knex('cards').where({match_id: req.params.gameId, card_id: req.body.card}).update({position: '6'})  //update player 2 bid
         if (gameState === 3) {
           knex('matches').where({id: req.params.gameId}).update({game_state_id: '1', last_move_time: new Date()}).asCallback(function(err){
-            res.redirect(`/`)
+            newTurn(req.params.gameId)
           })                        //change gamestate to the other player
         }
         else {
@@ -165,8 +165,18 @@ function newTurn (matchId) {
 
 function newPrize (matchId) {
   knex('cards').select('id').where({'match_id', matchId}, {'position': '3'}).asCallback(function(err, cards){
-    const drawnCardIndex = Math.floor(Math.random() * cards.length)
-    knex('cards').where({'match_id', matchId}, {'id': cards[drawnCardIndex].id }.update('position': '7')
+    if (cards.length === 0 ) {
+      knex('matches').where('id': matchId).update('game_state_id': '4').asCallback(function(err){         //gameover
+        res.redirect(`/`)
+      })
+    } else {
+      const drawnCardIndex = Math.floor(Math.random() * cards.length)
+      knex('cards').where({'match_id', matchId}, {'id': cards[drawnCardIndex].id }.update('position': '7').asCallback(function(err){
+        knex('matches').where('id': matchId).update('game_state_id': '3').asCallback(function(err){        //new prize selected and next turn
+          res.redirect(`/`)
+        })
+      })
+    }
   })
 }
 
