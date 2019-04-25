@@ -46,68 +46,96 @@ app.use("/api/users", usersRoutes(knex));
 
 // Home page
 app.get("/", (req, res) => {
+  console.log(`return ${req.session.user_id} return`)
   res.render("test");
 });
 
 app.post("/login", (req, res) => {
-  req.session.user_id = req.body.user_id
-  res.redirect("/")
+  knex('users').returning('id').insert({'name': req.body.user_id}).asCallback(function(err, output){
+    if (err){
+      console.log(err)
+    }
+    req.session.user_id = output[0]
+    res.redirect("/")
+  })
+  // req.session.user_id = knex('users').select('id').where({'name': req.body.user_id}).then(function(err, rows){
+  //   console.log(`return ${rows[0].id} return`)
+  // })
+  // console.log(`user_id${req.session.user_id}`)
+
 })
 
 app.post("/newgame", (req, res) => {
-  const matchId = knex.select('match_id').from('matches').where('player_2_id', null)
-  if (!matchId) {
-    knex.insert({match_id: generateRandomString(), player_1_id: req.session.user_id, player_1_points: '0', player_2_points: '0', game_state_id: '3', last_move_time: Date.now()})
-        .into('matches')
-        .asCallback(function(err){
-          if (err){
-            console.log(err)
-          }
-          knex.destroy()
-        })
-  }
-  else {
-    knex('matches')
-      .where({match_id: matchId})
-      .update({player_2_id: req.session.user_id})
-      .asCallback(function(err){
-        if (err){
-          console.log(err)
-        }
-        knes.destroy()
-      })
-  }
+  knex('users').select('id').where({'name': req.session.user_id}).asCallback(function(err, output){
+    const user = output[0]
+    knex.select('id').from('matches').whereNot('player1_id', req.session.user_id).andWhere('player2_id', null).asCallback(function(err, number){
+      const matchId = number[0].id
+      console.log(`cookie${req.session.user_id} user ${user} matchId ${matchId}`)
+      if (!matchId) {
+        knex.insert({player1_id: req.session.user_id, player1_points: '0', player2_points: '0',/* game_state_id: '3',*/ last_move: new Date()})
+            .into('matches')
+            .asCallback(function(err){
+              if (err){
+                console.log(err)
+              }
+              res.redirect(`/`)
+            })
+      }
+      else {
+        knex('matches')
+          .where({id: matchId})
+          .update({player2_id: req.session.user_id, last_move: new Date()})
+          .asCallback(function(err){
+            if (err){
+              console.log(err)
+            }
+            res.redirect(`/`)
+          })
+      }
+    })
+  })
 })
 
 app.post("/:gameId", (req, res) => {
-  const gameState = knex.select('game_state_id').from('matches').where('id', req.params.gameId)       // find the current gamestate
-  const playerId = req.session.user_id
-  if (playerId === knex.select('player_1_id').from('matches').where('id', req.params.gameId)) {
-    const player = 'player1'
-  }
-  else if (playerId === knex.select('player_2_id').from('matches').where('id', req.params.gameId)) {
-    const player = 'player2'
-  }
-  if (((player === 'player1') && (gameState === 1)) || (gameState === 3) || ((player === 'player1') && (gameState === 1))) {
-    if (player === 'player1'){
-      knex('cards').where({match_id: req.params.gameId, card_id: req.body.card}).update({position: '5'})  //update player 1 bid
-      if (gameState ===3) {
-        knex('matches').where({id: req.params.gameId}).update({game_state_id: '2', last_move_time: Date.now()})                       //change gamestate to the other player
+  knex.select('game_state_id', 'player1_id', 'player2_id').from('matches').where('id', req.params.gameId).asCallback(function(err, gameInfo){       // find the current gamestate
+    const playerId = req.session.user_id
+    const gameState = gameInfo[0].game_state_id
+    if (playerId === gameInfo[0].player1_id) {
+      const player = 'player1'
+    }
+    else if (playerId === gameInfo[0].player2_id) {
+      const player = 'player2'
+    }
+    if (((player === 'player1') && (gameState === 1)) || (gameState === 3) || ((player === 'player2') && (gameState === 2))) {
+      if (player === 'player1'){
+        knex('cards').where({match_id: req.params.gameId, card_id: req.body.card}).update({position: '5'}).asCallback(function(err){
+          if (gameState === 3) {
+            knex('matches').where({id: req.params.gameId}).update({game_state_id: '2', last_move_time: new Date()}).asCallback(function(err){
+              res.redirect(`/`)
+            })                     //change gamestate to the other player
+          }
+          else {
+            knex('matches').where({id: req.params.gameId}).update({game_state_id: '3', last_move_time: new Date()}).asCallback(function(err){
+              res.redirect(`/`)
+            })
+          }
+        })  //update player 1 bid
       }
-      else {
-        knex('matches').where({id: req.params.gameId}).update({game_state_id: '3', last_move_time: Date.now()})
+      else if (player === 'player2') {
+        knex('cards').where({match_id: req.params.gameId, card_id: req.body.card}).update({position: '6'})  //update player 2 bid
+        if (gameState === 3) {
+          knex('matches').where({id: req.params.gameId}).update({game_state_id: '1', last_move_time: new Date()}).asCallback(function(err){
+            res.redirect(`/`)
+          })                        //change gamestate to the other player
+        }
+        else {
+          knex('matches').where({id: req.params.gameId}).update({game_state_id: '3', last_move_time: new Date()}).asCallback(function(err){
+            res.redirect(`/`)
+          })
+        }
       }
     }
-    else if (player === 'player2') {
-      knex('cards').where({match_id: req.params.gameId, card_id: req.body.card}).update({position: '6'})  //update player 2 bid
-      if (gameState ===3) {
-        knex('matches').where({id: req.params.gameId}).update({game_state_id: '1', last_move_time: Date.now()})                        //change gamestate to the other player
-      }
-      else {
-        knex('matches').where({id: req.params.gameId}).update({game_state_id: '3', last_move_time: Date.now()})
-      }
-    }
-  }
+  })
 })
 
 
