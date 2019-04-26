@@ -98,8 +98,6 @@ function dealHands (matchId){
     let deck = []
     const drawnCardIndex = Math.floor(Math.random() * 13)
     for (let card in cards){
-      console.log(card)
-      console.log(`THESE ARE THE SUITS ${cards[card].suit}, index ${card}, id ${cards[card].id}`)
       let skip = false
       if (cards[card].suit === 'h'){
         position = '1'
@@ -115,9 +113,7 @@ function dealHands (matchId){
         knex('cards').insert({'match_id': matchId, 'card_id': cards[card].id, 'position_id': position})
         .returning('id')
         .then((id) => {
-          console.log(id);
           if (deck.length === 13){
-            console.log("drawnCardIndex", drawnCardIndex, deck, deck[drawnCardIndex])
             knex('cards').where('match_id', matchId).andWhere('card_id', deck[drawnCardIndex])
             .update({'position_id': '7'}).asCallback(function(err){})
           }
