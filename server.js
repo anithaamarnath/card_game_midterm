@@ -47,7 +47,7 @@ app.use("/api/users", usersRoutes(knex));
 // Home page
 app.get("/", (req, res) => {
 
-  res.render("index");
+  res.render("user_id");
 
 });
 
@@ -217,6 +217,17 @@ function generateRandomString () {
     }
   }
 }
+
+//--------------------------------------------------------------------------
+app.get("/:userid", (req, res) => {
+
+
+
+  res.render("index");
+
+});
+
+
 
 app.listen(PORT, () => {
   console.log("Example app listening on port " + PORT);
