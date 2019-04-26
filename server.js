@@ -146,14 +146,14 @@ function placeBid (newPosition, newGamestate, gameId, card, gameState, res, othe
       console.log('trying to place bid with gamestate 3')
       console.log(newPosition, newGamestate, gameId, card, gameState, otherTurn)
       knex('cards').where({'match_id': gameId}).andWhere({'card_id': card}).update({'position_id': newPosition}).asCallback(function(err){
-        knex('matches').where({'id': gameId}).update({'game_state_id': newGamestate, 'last_move_time': new Date()}).asCallback(function(err){
+        knex('matches').where({'id': gameId}).update({'game_state_id': newGamestate, 'last_move': new Date()}).asCallback(function(err){
           res.redirect(`/`)
         })
       })                     //change gamestate to the other player
     }
     else if (gameState === otherTurn){
       knex('cards').where({'match_id': gameId}).andWhere({'card_id': card}).update({'position_id': newPosition}).asCallback(function(err){
-        knex('matches').where({'id': gameId}).update({'game_state_id': '3', 'last_move_time': new Date()}).asCallback(function(err){
+        knex('matches').where({'id': gameId}).update({'game_state_id': '3', 'last_move': new Date()}).asCallback(function(err){
           newTurn(gameId, res)
         })
       })
