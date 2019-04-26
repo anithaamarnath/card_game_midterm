@@ -95,7 +95,8 @@ app.post("/newgame", (req, res) => {
 function dealHands (matchId){
   knex('card_lookup').select('id', 'suit').asCallback(function(err,cards){
     let position = '1'
-    let deck = 0
+    let deck = []
+    const drawnCardIndex = Math.floor(Math.random() * 13)
     for (let card in cards){
       console.log(card)
       console.log(`THESE ARE THE SUITS ${cards[card].suit}, index ${card}, id ${cards[card].id}`)
@@ -106,17 +107,21 @@ function dealHands (matchId){
         position = '2'
       } else if (cards[card].suit === 'd'){
         position = '3'
-        deck ++
+        deck.push(cards[card].id)
       } else {
         skip = true
       }
       if (!skip){
-        knex('cards').insert({'match_id': matchId, 'card_id': cards[card].id, 'position_id': position}).asCallback(function(err){
-          // if (deck === 13){
-          //   const drawnCardIndex = Math.floor(Math.random() * 13)
-          //   knex('cards').where({'match_id': matchId}, {'id': cards[drawnCardIndex].id }, {'position_id': '3'}).update({'position_id': '7'}).asCallback(function(err){})
-          // }
-        })
+        knex('cards').insert({'match_id': matchId, 'card_id': cards[card].id, 'position_id': position})
+        .returning('id')
+        .then((id) => {
+          console.log(id);
+          if (deck.length === 13){
+            console.log("drawnCardIndex", drawnCardIndex, deck, deck[drawnCardIndex])
+            knex('cards').where('match_id', matchId).andWhere('card_id', deck[drawnCardIndex])
+            .update({'position_id': '7'}).asCallback(function(err){})
+          }
+        });
       }
     }
   })
