@@ -1,0 +1,18 @@
+<nav id="nav-bar">
+  <img class="logo" src="/images/logo.jpg" >
+  <span class="header">Card Game</span>
+    <% if(user === null) { %>
+    <a href = "/login"> Login </a>
+    <% } else{ %>
+  <form method="POST" action="/logout">
+    <a href="/index" class="btn btn-info " role="button">Logout</a>
+    <a href="/user_id" class="btn btn-info" role="button"> <%= user %> </a>
+
+  </form>
+
+</nav>
+    <% } %>
+
+
+
+

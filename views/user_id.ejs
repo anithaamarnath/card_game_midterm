@@ -14,19 +14,46 @@
   </head>
 
   <body>
-    <nav id="nav-bar">
-      <img class="logo" src="/images/logo.jpg" >
-      <span class="header">Card Game</span>
-      <a href="#" class="btn btn-info " role="button">Username</a>
-      <a href="#" class="btn btn-info " role="button">Logout</a>
-    </nav>
+    <header>
+      <% include ./partials/_header %>
+    </header>
+
 
 
     <div class="container">
 
       <div class="row">
         <div class="col-md-4">
-           <h3>Active Game</h3> <br>
+          <% if(!urls){ %>
+      <h1> No urls for this user </h1>
+
+
+    <% } %>
+    <% for(let keys in urls){ %>
+
+      <form method="POST" action="/urls/<%= keys %>/delete">
+        <li>
+          <a href="<%= urls[keys].longURL %>"><%= keys %></a>  -  <%= urls[keys].longURL %>
+          <a href="/urls/<%= keys %>">Edit</a>
+          <button type="Edit" class="btn btn-primary">Delete</button>
+
+      </form>
+    </li>
+    <% }; %>
+          <h3>Active Games</h3> <br>
+            <% if(user === null){ %>
+          <h1> No Active Game </h1>
+            <% } %>
+          <form method="POST" action="/<%= user %>">
+              <li>
+          <a href="<%= urls[keys].longURL %>"><%= keys %></a>  -  <%= urls[keys].longURL %>
+          <a href="/urls/<%= keys %>">Edit</a>
+          <button type="Edit" class="btn btn-primary">Delete</button>
+
+          </form>
+              </li>
+
+
             <div class="p-2">Flex item 1</div>
             <div class="p-2">Flex item 2</div>
             <div class="p-2">Flex item 3</div>
@@ -38,7 +65,7 @@
             <div class="p-2">Flex item 9</div>
         </div>
         <div class="col-md-4">
-           <h3>Active Game</h3> <br>
+           <h3>Archived Games</h3> <br>
             <div class="p-2">Flex item 1</div>
             <div class="p-2">Flex item 2</div>
             <div class="p-2">Flex item 3</div>
@@ -61,11 +88,6 @@
 
       </div>
     </div>
-
-
-
-
-
 
   </body>
 </html>
