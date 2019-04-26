@@ -158,6 +158,9 @@ function placeBid (newPosition, newGamestate, gameId, card, gameState, res, othe
         })
       })
     }
+    else {
+      res.redirect(`/`)
+    }
 }
 
 
@@ -166,17 +169,15 @@ function newTurn (matchId, res) {
     knex('cards').select('value').where({'match_id': matchId}, {'position_id': '5'}).join('card_lookup', {'card_lookup.id': 'card_id'}).asCallback(function(err, player1Card){
       knex('cards').select('value').where({'match_id': matchId}, {'position_id': '6'}).join('card_lookup', {'card_lookup.id': 'card_id'}).asCallback(function(err, player2Card){
         if (player1Card[0].value > player2Card[0].value){
-          const winner = 'player1_points'
+          knex('matches').where({'id': matchId}).update({'player1_points': prize[0].value}).asCallback(function(err){})
         }
         else if (player1Card[0].value < player2Card[0].value){
-          const winner = 'player2_points'
+          knex('matches').where({'id': matchId}).update({'player2_points': prize[0].value}).asCallback(function(err){})
         }
-        knex('matches').where({'id': matchId}).update({winner: prize[0].value}).asCallback(function(err){
-          knex('cards').where({'match_id': matchId}, {'position_id': '7'}).update({'position_id': '4'}).asCallback(function(err){
-            knex('cards').where({'match_id': matchId}, {'position_id': '5'}).update({'position_id': '4'}).asCallback(function(err){
-              knex('cards').where({'match_id': matchId}, {'position_id': '6'}).update({'position_id': '4'}).asCallback(function(err){
-                newPrize(matchId, res)
-              })
+        knex('cards').where({'match_id': matchId}).andWhere({'position_id': '7'}).update({'position_id': '4'}).asCallback(function(err){
+          knex('cards').where({'match_id': matchId}).andWhere({'position_id': '5'}).update({'position_id': '4'}).asCallback(function(err){
+            knex('cards').where({'match_id': matchId}).andWhere({'position_id': '6'}).update({'position_id': '4'}).asCallback(function(err){
+              newPrize(matchId, res)
             })
           })
         })
