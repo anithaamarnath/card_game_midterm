@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
     <link rel="stylesheet" href="/styles/nav.css" type="text/css" />
     <link rel="stylesheet" href="/styles/form_body.css" type="text/css" />
+    <link rel="stylesheet" href="/styles/body.css" type="text/css" />
 
 
     <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
@@ -16,21 +17,20 @@
   </head>
 
   <body>
-     <nav id="nav-bar">
+    <nav id="nav-bar">
       <img class="logo" src="/images/logo.jpg" >
       <span class="header">Card Game</span>
       <a href="#" class="btn btn-info " role="button">Username</a>
     </nav>
-    <form>
-      <div class="container center">
-      <label for="uname"><b>Username</b></label>
-      <input type="text" placeholder="Enter Username" name="uname" required>
-       <button type="submit" class= "btn btn-info">Login</button>
-       </div>
-     </form>
 
+    <div class="jumbotron">
+      <form method="POST" action="/login">
+        Username: <br>
+        <input type="text" placeholder="Enter Username" name="uname" required>
 
-
+        <button type="submit" class="btn btn-primary"> login</button>
+      </form>
+    </div>
 
   </body>
 </html>
