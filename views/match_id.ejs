@@ -20,18 +20,23 @@
       </div>
 
       <div class='prize_and_bids'>
-        <div class='deck, card'>
+        <div class='deck card'>
         </div>
-        <div class='prize, card'>
+        <div class='prize card'>
+          <% if (prize) { %>
+              <article class='face_up bid'>
+                <p><%= prize %>
+              </article>
+            <% } %>
         </div>
         <div =class='bids'>
-          <div class='opponent_bid, card'>
+          <div class='opponent_bid card'>
             <% if (opponent_bid) { %>
               <article class='face_down bid'>
               </article>
             <% } %>
           </div>
-          <div class ='player_bid, card'>
+          <div class ='player_bid card'>
             <% if (player_bid) { %>
               <article class='face_up bid'>
                 <p><%= player_bid %>
