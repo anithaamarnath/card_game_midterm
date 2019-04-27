@@ -140,7 +140,21 @@ module.exports.userData = function (user_id){
   });
 }
 
-//-------------------------------------------------
+//-----------------------------------------------
+/*module.exports.*/userRankingGoofspiel = function (){
+  knex.select('*').from('users')
+  .orderBy('ranking')
+  .asCallback(function(err, rows) {
+    if(err){
+      return console.error("Connection Error", err);
+    }
+    //console.log("User:");
+    console.log(rows);
+  });
+}
+
+userRankingGoofspiel();
+
 
 
 
