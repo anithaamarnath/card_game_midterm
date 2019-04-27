@@ -3,11 +3,49 @@
   <head>
     <title>Home Page</title>
 
+    <link rel="stylesheet" href="/styles/nav.css" type="text/css" />
+    <link rel="stylesheet" href="/styles/match_id.css" type="text/css" />
+
     <script type="text/javascript" src="/scripts/app.js"></script>
   </head>
 
   <body>
     <% include ./partials/_header %>
+    <div class='game_board'>
+      <div class='opponet'>
+        <div class='opponent_hand'>
+        </div>
+        <p class='name'><%= opponent_name %> <%= opponent_ranking %></p>
+        <h3 class='points'> Score: <%= opponent_points %></h3>
+      </div>
 
+      <div class='prize_and_bids'>
+        <div class='deck, card'>
+        </div>
+        <div class='prize, card'>
+        </div>
+        <div =class='bids'>
+          <div class='opponent_bid, card'>
+          </div>
+          <div class ='player_bid, card'>
+          </div>
+        </div>
+     </div>
+     <div class='player'>
+      <h3 class='points'> Score: <%= player_points %></h3>
+      <p class='name'><%= user %> <%= player_ranking %></p>
+      <div class='player_area'>
+        <div class='player_hand'>
+          <% for (let card in player_hand) { %>
+            <article class='face_up'>
+              <p><%= player_hand[card].value %></p>
+            </article>
+          <% } %>
+        </div>
+        <div class='submit'>
+        </div>
+      </div>
+    </div>
+    </div>
   </body>
 </html>

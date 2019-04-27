@@ -70,7 +70,7 @@ app.get("/:gameId", (req, res) => {
           // console.log(req.session.user_id, data[0].player1_id, data[0])
           if (req.session.user_id === data[0].player1_id){
             templateVars.cards_left_deck = false
-            templateVars.player_name = data[0].name1
+            templateVars.user = data[0].name1
             templateVars.opponent_name = data[0].name2
             templateVars.player_ranking = data[0].ranking1
             templateVars.opponent_ranking = data[0].ranking2
@@ -97,7 +97,7 @@ app.get("/:gameId", (req, res) => {
           }
           else if (req.session.user_id === data[0].player2_id) {
             templateVars.cards_left_deck = false
-            templateVars.player_name = data[0].name2
+            templateVars.user = data[0].name2
             templateVars.opponent_name = data[0].name1
             templateVars.player_ranking = data[0].ranking2
             templateVars.opponent_ranking = data[0].ranking1

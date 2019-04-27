@@ -1,0 +1,66 @@
+html, body {
+  overflow: hidden;
+  background-color: green;
+}
+
+.game_board {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.opponent_hand {
+  height: 20vh;
+  width: 80vw;
+  background-color: red;
+}
+
+.player_area {
+  height: 150px;
+  width: 80vw;
+  background-color: blue;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.prize_and_bids {
+  height: 30vh;
+  width: 50vw;
+  background-color: yellow;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card {
+  background-color: black;
+  height: 150px;
+  width: 150px;
+  margin: 10px;
+}
+
+.bids {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.player_hand {
+  width: 100%;
+  height: 100%;
+  background-color: purple;
+}
+
+.submit {
+  background-color: yellow;
+  height:100px;
+  width: 100px;
+}
+
+.face_up {
+  height: 100px;
+}
