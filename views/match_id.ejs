@@ -14,6 +14,14 @@
     <div class='game_board'>
       <div class='opponet'>
         <div class='opponent_hand'>
+          <!-- <% let length = player_hand.length %>
+          <% if (!opponent_bid) { %>
+            <% length = length - 1 %>
+          <% } %> -->
+          <% for (i = 0; i < opponent_hand_size; i++) { %>
+            <article class='face_down bid'>
+            </article>
+          <% } %>
         </div>
         <p class='name'><%= opponent_name %> <%= opponent_ranking %></p>
         <h3 class='points'> Score: <%= opponent_points %></h3>
@@ -21,6 +29,10 @@
 
       <div class='prize_and_bids'>
         <div class='deck card'>
+          <% if (cards_left_deck) { %>
+              <article class='face_down bid'>
+              </article>
+            <% } %>
         </div>
         <div class='prize card'>
           <% if (prize) { %>

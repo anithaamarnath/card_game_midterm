@@ -77,9 +77,10 @@ app.get("/:gameId", (req, res) => {
             templateVars.opponent_ranking = data[0].ranking2
             templateVars.player_points = data[0].player1_points
             templateVars.opponent_points = data[0].player2_points
+            templateVars.player_hand = []
+            templateVars.opponent_hand_size = 0
             templateVars.player_bid = null
             templateVars.prize = null
-            templateVars.player_hand = []
             for (let card in cards) {
               if (cards[card].position_id === 1) {
                 templateVars.player_hand.push(cards[card].value)
@@ -96,6 +97,9 @@ app.get("/:gameId", (req, res) => {
               else if (cards[card].position_id === 3) {
                 templateVars.cards_left_deck = true
               }
+              else if (cards[card].position_id === 2) {
+                templateVars.opponent_hand_size ++
+              }
             }
           }
           else if (req.session.user_id === data[0].player2_id) {
@@ -108,6 +112,7 @@ app.get("/:gameId", (req, res) => {
             templateVars.player_points = data[0].player2_points
             templateVars.opponent_points = data[0].player1_points
             templateVars.player_hand = []
+            templateVars.opponent_hand_size = 0
             templateVars.player_bid = null
             templateVars.prize = null
             for (let card in cards) {
@@ -125,6 +130,9 @@ app.get("/:gameId", (req, res) => {
               }
               else if (cards[card].position_id === 3) {
                 templateVars.cards_left_deck = true
+              }
+              else if (cards[card].position_id === 1) {
+                templateVars.opponent_hand_size ++
               }
             }
           }

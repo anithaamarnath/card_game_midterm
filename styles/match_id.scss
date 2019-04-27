@@ -16,6 +16,9 @@ html, body {
   height: 20vh;
   width: 80vw;
   background-color: red;
+  display: flex;
+  justify-content: space-between;
+  padding-right: .5em;
 }
 
 .player_area {
@@ -75,7 +78,13 @@ html, body {
    margin-left: .5em;
 }
 
+.opponent_hand .face_down {
+  margin-left: .5em;
+}
+
 .face_down {
+  height: 100px;
+  width: 5vw;
   background-color: brown;
 }
 
