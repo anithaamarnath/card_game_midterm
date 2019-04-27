@@ -153,7 +153,7 @@ module.exports.userData = function (user_id){
   });
 }
 
-usersRankingGoofspiel();
+//usersRankingGoofspiel();
 
 
 

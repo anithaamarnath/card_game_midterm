@@ -6,10 +6,8 @@
     <% } else{ %>
   <form method="POST" action="/logout">
     <a href="/index" class="btn btn-info " role="button">Logout</a>
-    <a href="/user_id" class="btn btn-info" role="button"> <%= user.userName  %> Ranking: <%= user.userRank  %> </a>
-
+    <a href="/user_id" class="btn btn-info" role="button"> <%= user %> Ranking: <%= userRank %> </a>
   </form>
-
 </nav>
     <% } %>
 
