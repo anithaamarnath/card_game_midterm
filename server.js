@@ -51,7 +51,7 @@ app.get("/", (req, res) => {
 });
 
 
-app.get("/:gameId", (req, res) => {
+app.get("/match/:gameId", (req, res) => {
   let templateVars = {}
   knex('matches')
     .select('u1.name as name1','u2.name as name2', 'u1.ranking as ranking1', 'u2.ranking as ranking2', 'player1_points', 'player2_points', 'player1_id', 'player2_id')
@@ -138,11 +138,17 @@ app.get("/:gameId", (req, res) => {
               }
             }
           }
-          templateVars.player_hand.sort(function(a, b) {
-            return a.value - b.value
-          })
-          console.log('templatevars', templateVars)
-          res.render("match_id", templateVars)
+          if (templateVars.player_bid && templateVars.opponent_bid) {       //failsafe against the game locking up when 2 players bid at the same time
+            console.log('++++++++lock prevented')
+            newTurn(req.params.gameId, res)
+          }
+          else {
+            templateVars.player_hand.sort(function(a, b) {
+              return a.value - b.value
+            })
+            console.log('templatevars', templateVars)
+            res.render("match_id", templateVars)
+          }
     })
   })
 })
@@ -150,9 +156,6 @@ app.get("/:gameId", (req, res) => {
 
 //-------------------------------------------------------------------------
 
-app.get("/test", (req, res) => {
-  res.render('test');
-});
 
 
 app.post("/login", (req, res) => {
@@ -192,7 +195,7 @@ app.post("/newgame", (req, res) => {
           }
           console.log('NewGameMade Sucessfully')
           dealHands(number[0].id)
-          res.redirect(`/`)
+          res.redirect(`/match/${number[0].id}`)
         })
     }
   })
@@ -229,7 +232,7 @@ function dealHands (matchId){
   })
 }
 
-app.post("/:gameId", (req, res) => {
+app.post("/match/:gameId", (req, res) => {
   knex.select('game_state_id', 'player1_id', 'player2_id').from('matches').where('id', req.params.gameId).asCallback(function(err, gameInfo){       // find the current gamestate
     const playerId = req.session.user_id
     const gameState = gameInfo[0].game_state_id
@@ -253,41 +256,48 @@ function placeBid (newPosition, newGamestate, gameId, card, gameState, res, othe
       console.log(newPosition, newGamestate, gameId, card, gameState, otherTurn)
       knex('cards').where({'match_id': gameId}).andWhere({'card_id': card}).update({'position_id': newPosition}).asCallback(function(err){
         knex('matches').where({'id': gameId}).update({'game_state_id': newGamestate, 'last_move': new Date()}).asCallback(function(err){
-          res.redirect(`/`)
+          res.redirect(`/match/${gameId}`)
         })
       })                     //change gamestate to the other player
     }
     else if (gameState === otherTurn){
       knex('cards').where({'match_id': gameId}).andWhere({'card_id': card}).update({'position_id': newPosition}).asCallback(function(err){
-        knex('matches').where({'id': gameId}).update({'game_state_id': '3', 'last_move': new Date()}).asCallback(function(err){
-          newTurn(gameId, res)
-        })
+        console.log('______ new turn after both bids placed')
+        newTurn(gameId, res)
       })
     }
     else {
-      res.redirect(`/`)
+      res.redirect(`/match/${gameId}`)
     }
 }
 
 
 function newTurn (matchId, res) {
+  knex('matches').where({'id': matchId}).update({'game_state_id': '3', 'last_move': new Date()}).asCallback(function(err){})
   knex('cards').select('value').where({'match_id': matchId}).andWhere({'position_id': '7'}).join('card_lookup', {'card_lookup.id': 'card_id'}).asCallback(function(err, prize){
     knex('cards').select('value').where({'match_id': matchId}).andWhere({'position_id': '5'}).join('card_lookup', {'card_lookup.id': 'card_id'}).asCallback(function(err, player1Card){
       knex('cards').select('value').where({'match_id': matchId}).andWhere({'position_id': '6'}).join('card_lookup', {'card_lookup.id': 'card_id'}).asCallback(function(err, player2Card){
-        console.log(`p1 card ${player1Card[0].value}, p2 card ${player2Card[0].value}, prize ${prize[0].value}`, player1Card, player2Card, prize)
-        if (player1Card[0].value > player2Card[0].value){
-          awardPoints('player1_points', prize[0].value, matchId)
+        if (!player1Card[0] || !player2Card[0] || !prize[0]) {
+          console.log('============= redirecting after error')
+          console.log(`p1 card ${player1Card[0]}, p2 card ${player2Card[0]}, prize ${prize[0]}`)
+          res.redirect(`/match/${matchId}`)
         }
-        else if (player1Card[0].value < player2Card[0].value){
-          awardPoints('player2_points', prize[0].value, matchId)
-        }
-        knex('cards').where({'match_id': matchId}).andWhere({'position_id': '7'}).update({'position_id': '4'}).asCallback(function(err){
-          knex('cards').where({'match_id': matchId}).andWhere({'position_id': '5'}).update({'position_id': '4'}).asCallback(function(err){
-            knex('cards').where({'match_id': matchId}).andWhere({'position_id': '6'}).update({'position_id': '4'}).asCallback(function(err){
-              newPrize(matchId, res)
+        else {
+          console.log(`p1 card ${player1Card[0].value}, p2 card ${player2Card[0].value}, prize ${prize[0].value}`, player1Card, player2Card, prize)
+          if (player1Card[0].value > player2Card[0].value){
+            awardPoints('player1_points', prize[0].value, matchId)
+          }
+          else if (player1Card[0].value < player2Card[0].value){
+            awardPoints('player2_points', prize[0].value, matchId)
+          }
+          knex('cards').where({'match_id': matchId}).andWhere({'position_id': '7'}).update({'position_id': '4'}).asCallback(function(err){
+            knex('cards').where({'match_id': matchId}).andWhere({'position_id': '5'}).update({'position_id': '4'}).asCallback(function(err){
+              knex('cards').where({'match_id': matchId}).andWhere({'position_id': '6'}).update({'position_id': '4'}).asCallback(function(err){
+                newPrize(matchId, res)
+              })
             })
           })
-        })
+        }
       })
     })
   })
@@ -312,13 +322,13 @@ function newPrize (matchId, res) {
   knex('cards').select('card_id').where({'match_id': matchId}).andWhere({'position_id': '3'}).asCallback(function(err, cards){
     if (cards.length === 0 ) {
       knex('matches').where({'id': matchId}).update({'game_state_id': '4'}).asCallback(function(err){         //gameover
-        res.redirect(`/`)
+        res.redirect(`/match/${matchId}`)
       })
     } else {
       const drawnCardIndex = Math.floor(Math.random() * cards.length)
       console.log(`card to be selected for a new prize ${cards[drawnCardIndex].card_id}`)
       knex('cards').where('match_id', matchId).andWhere('card_id', cards[drawnCardIndex].card_id).update({'position_id': '7'}).asCallback(function(err){
-        res.redirect(`/`)
+        res.redirect(`/match/${matchId}`)
       })
     }
   })
@@ -348,6 +358,6 @@ function generateRandomString () {
 
 
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log("Example app listening on port " + PORT);
 });
