@@ -128,32 +128,20 @@ module.exports.matchesForUser = function (user_id, cb){
 }
 //-----------------------------------------------
 
-module.exports.userData = function (user_id){
-  knex.select('*').from('users')
-  .where('users.id',user_id)
-  .asCallback(function(err, rows) {
-    if(err){
-      return console.error("Connection Error", err);
-    }
-    console.log("User:");
-    console.log(rows);
-  });
-}
-
-//-----------------------------------------------
-/*module.exports.*/usersRankingGoofspiel = function (){
+module.exports.usersRankingGoofspiel = function (cb){
   knex.select('*').from('users')
   .orderBy('ranking')
   .asCallback(function(err, rows) {
     if(err){
       return console.error("Connection Error", err);
+      cb();
     }
-    //console.log("User:");
     console.log(rows);
+    cb(rows);
   });
 }
 
-//usersRankingGoofspiel();
+
 
 
 

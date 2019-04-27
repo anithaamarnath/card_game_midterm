@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Home Page</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
+    <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
+    <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
+    <link rel="stylesheet" href="/styles/nav.css" type="text/css" />
+    <link rel="stylesheet" href="/styles/form_body.css" type="text/css" />
+     <link rel="stylesheet" href="/styles/body.css" type="text/css" />
+    <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
+
+  </head>
+
+  <body>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <h3>Users Ranking</h3> <br>
+            <% for(let key in data){ %>
+
+            <div class="p-2"> USER <%= data[key].name %> - RANK <%= data[key].ranking %></div>
+
+            <% }; %>
+      </div>
+
+
+        <div class="col-md-6 pull-right">
+            <h3>New Game</h3> <br>
+            <button type="button" class="btn btn-primary btn-lg btn-block btn-sm">Goofspiel - Rank </button>
+            <button type="button" class="btn btn-primary btn-lg btn-block btn-sm">Poker - Your Rank: 0</button>
+            <button type="button" class="btn btn-primary btn-lg btn-block btn-sm">Rummy - Your Rank: 0</button>
+            <button type="button" class="btn btn-primary btn-lg btn-block btn-sm">Solitaire - Your Rank: 0</button>
+            <button type="button" class="btn btn-primary btn-lg btn-block btn-sm">Poker 0</button>
+        </div>
+
+      </div>
+    </div>
+
+  </body>
+  <script type="text/javascript" src="/scripts/app.js"></script>
+
+</html>

@@ -347,14 +347,10 @@ function generateRandomString () {
 //--------------------------------------------------------------------------
 app.get("/user/:userid", (req, res) => {
   const userid = req.params.userid;
-  // var userName = 'Bobo';
-  // var userRank = null;
-    //res.send(userid);
     knexQueries.matchesForUser(userid,function (data) {
           console.log(data);
           let user = userInformation(userid, data[0]);
           console.log(user);
-
           let templateVars = {data: data, user: user.userName, userRank: user.userRank, userid: user.userid};
           res.render("user_id",templateVars);
 
@@ -371,6 +367,15 @@ function userInformation(userid, row){
   }
  return {userid: userid, userName: userName, userRank: userRank}
 }
+
+//------------------------------------------------------
+
+app.get("/user", (req, res) => {
+  knexQueries.usersRankingGoofspiel(function(data){
+    let templateVars = {data: data};
+    res.render("user",templateVars);
+  });
+});
 
 
 
