@@ -68,11 +68,17 @@ html, body {
   height: 100px;
   width: 5vw;
   background-color: white;
-  margin-left: .5em;
+}
+
+.player_hand .face_up {
+   margin-left: .5em;
 }
 
 .face_down {
+  background-color: brown;
+}
+
+.bid {
   height: 150px;
   width: 100%;
-  background-color: brown;
 }

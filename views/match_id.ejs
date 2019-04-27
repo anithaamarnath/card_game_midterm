@@ -27,11 +27,16 @@
         <div =class='bids'>
           <div class='opponent_bid, card'>
             <% if (opponent_bid) { %>
-              <article class='face_down'>
+              <article class='face_down bid'>
               </article>
             <% } %>
           </div>
           <div class ='player_bid, card'>
+            <% if (player_bid) { %>
+              <article class='face_up bid'>
+                <p><%= player_bid %>
+              </article>
+            <% } %>
           </div>
         </div>
      </div>
