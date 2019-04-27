@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="/styles/match_id.css" type="text/css" />
 
     <script type="text/javascript" src="/scripts/app.js"></script>
+    <script type="text/javascript">
+      function autoFill(card) {
+        document.getElementById('input1').value = card;
+      }
+    </script>
   </head>
 
   <body>
@@ -63,12 +68,17 @@
       <div class='player_area'>
         <div class='player_hand'>
           <% for (card in player_hand) { %>
-            <article class='face_up'>
+            <a href='#' class='face_up' onclick="autoFill(<%= player_hand[card] %>); return true;">
               <p><%= player_hand[card] %></p>
-            </article>
+            </a>
           <% } %>
         </div>
         <div class='submit'>
+          <form>
+          <p>
+            <label>Text Input: </label>
+            <input type="text" id="input1">
+          </p>
         </div>
       </div>
     </div>
