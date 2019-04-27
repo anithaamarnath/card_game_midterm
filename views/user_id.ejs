@@ -14,14 +14,17 @@
   </head>
 
   <body>
+
 <header>
   <% include ./partials/_header %>
 </header>
   <div class="container">
+    <body>
+
     <div class="row">
       <div class="col-md-4">
         <h3>Active Games</h3> <br>
-          <% const state = ['Waiting P1','Wait P2', 'Active','Inactive']%>
+          <% const state = ['Your Turn','Opponent Turn', 'Active','Inactive']%>
           <% const classes = ['alert alert-warning alert-dismissible fade show text-warning','alert alert-info alert-dismissible fade show text-info', 'alert alert-success alert-dismissible fade show text-success','alert alert-danger alert-dismissible fade show text-danger']%>
             <% for(let key in data){ %>
               <% let opponent = data[key].name1 %>
@@ -29,17 +32,18 @@
                 <% opponent = data[key].name2%>
               <% } %>
               <% if(data[key].game_state_id != 4) {  %>
-                <div class="p-2 <%= classes[data[key].game_state_id - 1]%> " >
-                  <a class ="link" href="/match/<%= data[key].id%>">  Goofspiel vs <%= opponent %></a>
+                <div class="p-2 <%= classes[data[key].game_state_id - 1]%>  mr-2" >
+                  <a class ="alert-link" href="/match/<%= data[key].id%> ">  Goofspiel vs <%= opponent %></a>
                   <%= state[data[key].game_state_id - 1] %>
                 </div>
               <% } %>
             <% }; %>
       </div>
       <div class="col-md-4">
-
-        <% const classWin = ['bg-success','bg-danger']%>
         <h3>Archived Games</h3> <br>
+        <% const resultClass = { 'WIN' : 'alert alert-primary', 'LOSS' :'alert alert-dark'} %>
+
+        <% const classWin=['alert alert-secondary', 'alert alert-dark'] %>
           <% for(let key in data){ %>
             <% let opponent = data[key].name1 %>
             <%let points_user = data[key].player2_points %>
@@ -54,19 +58,19 @@
                 <%if(points_opponent > points_user) {%>
                   <%result = 'LOSS'%>
                 <%}%>
-                  <div class="p-2 <%= classWin[result]%>"> Goofspiel vs <%= opponent %> - <%= result %></div>
+                  <div class="p-2 <%= resultClass[result]%>"> Goofspiel vs <%= opponent %> - <%= result %></div>
               <% } %>
           <% }; %>
 
       </div>
 
         <div class="col-md-4 pull-right">
-            <h3>Buttons</h3> <br>
-            <button type="button" class="btn btn-primary btn-lg btn-block btn-sm">Goofspiel [Ranking]</button>
-            <button type="button" class="btn btn-primary btn-lg btn-block btn-sm">Poker [Ranking]</button>
-            <button type="button" class="btn btn-primary btn-lg btn-block btn-sm">Rummy [Ranking]</button>
-            <button type="button" class="btn btn-primary btn-lg btn-block btn-sm">Solitaire [Ranking]</button>
-            <button type="button" class="btn btn-primary btn-lg btn-block btn-sm">Poker [Ranking]</button>
+            <h3>New Game</h3>
+            <button type="button" class="btn btn-info btn-lg btn-block btn-sm mr-2">Goofspiel [Ranking]</button>
+            <button type="button" class="btn btn-info btn-lg btn-block btn-sm mr-2">Poker [Ranking]</button>
+            <button type="button" class="btn btn-info btn-lg btn-block btn-sm mr-2">Rummy [Ranking]</button>
+            <button type="button" class="btn btn-info btn-lg btn-block btn-sm mr-2">Solitaire [Ranking]</button>
+            <button type="button" class="btn btn-info btn-lg btn-block btn-sm mr-2">Poker [Ranking]</button>
         </div>
 
       </div>
