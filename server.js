@@ -46,9 +46,90 @@ app.use("/api/users", usersRoutes(knex));
 
 // Home page
 app.get("/", (req, res) => {
+  res.render("test");
+});
 
-  res.render("user_id");
 
+app.get("/:gameId", (req, res) => {
+  let templateVars = {}
+  knex('matches')
+    .select('u1.name as name1','u2.name as name2', 'u1.ranking as ranking1', 'u2.ranking as ranking2', 'player1_points', 'player2_points', 'player1_id', 'player2_id')
+    .innerJoin('users as u1', function() {
+      this.on('u1.id','=','matches.player1_id')
+    })
+    .innerJoin('users as u2', function() {
+      this.on('u2.id','=','matches.player2_id')
+    })
+    .where('matches.id', req.params.gameId)
+    .asCallback(function(err, data){
+      knex('cards')
+        .select('position_id', 'value')
+        .join('card_lookup', {'card_lookup.id': 'card_id'})
+        .where('match_id', req.params.gameId)
+        .asCallback(function(err, cards){
+          // console.log(req.session.user_id, data[0].player1_id, data[0])
+          if (req.session.user_id === data[0].player1_id){
+            templateVars.cards_left_deck = false
+            templateVars.player_name = data[0].name1
+            templateVars.opponent_name = data[0].name2
+            templateVars.player_ranking = data[0].ranking1
+            templateVars.opponent_ranking = data[0].ranking2
+            templateVars.player_points = data[0].player1_points
+            templateVars.opponent_points = data[0].player2_points
+            templateVars.player_hand = []
+            for (let card in cards) {
+              if (cards[card].position_id === 1) {
+                templateVars.player_hand.push(cards[card].value)
+              }
+              else if (cards[card].position_id === 7) {
+                templateVars.prize = cards[card].value
+              }
+              else if (cards[card].position_id === 5) {
+                templateVars.player_bid = cards[card].value
+              }
+              else if (cards[card].position_id === 6) {
+                templateVars.opponet_bet = true
+              }
+              else if (cards[card].position_id === 3) {
+                templateVars.cards_left_deck = true
+              }
+            }
+          }
+          else if (req.session.user_id === data[0].player2_id) {
+            templateVars.cards_left_deck = false
+            templateVars.player_name = data[0].name2
+            templateVars.opponent_name = data[0].name1
+            templateVars.player_ranking = data[0].ranking2
+            templateVars.opponent_ranking = data[0].ranking1
+            templateVars.player_points = data[0].player2_points
+            templateVars.opponent_points = data[0].player1_points
+            templateVars.player_hand = []
+            for (let card in cards) {
+              if (cards[card].position_id === 2) {
+                templateVars.player_hand.push(cards[card].value)
+              }
+              else if (cards[card].position_id === 7) {
+                templateVars.prize = cards[card].value
+              }
+              else if (cards[card].position_id === 6) {
+                templateVars.player_bid = cards[card].value
+              }
+              else if (cards[card].position_id === 5) {
+                templateVars.opponet_bet = true
+              }
+              else if (cards[card].position_id === 3) {
+                templateVars.cards_left_deck = true
+              }
+            }
+          }
+          templateVars.player_hand.sort(function(a, b) {
+            return a - b
+          })
+          console.log('templatevars', templateVars)
+          res.render("match_id", templateVars)
+
+        })
+    })
 });
 
 app.post("/login", (req, res) => {
@@ -228,15 +309,6 @@ function generateRandomString () {
     }
   }
 }
-
-//--------------------------------------------------------------------------
-app.get("/:userid", (req, res) => {
-
-
-
-  res.render("index");
-
-});
 
 
 
