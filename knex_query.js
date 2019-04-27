@@ -141,7 +141,7 @@ module.exports.userData = function (user_id){
 }
 
 //-----------------------------------------------
-/*module.exports.*/userRankingGoofspiel = function (){
+/*module.exports.*/usersRankingGoofspiel = function (){
   knex.select('*').from('users')
   .orderBy('ranking')
   .asCallback(function(err, rows) {
@@ -153,7 +153,7 @@ module.exports.userData = function (user_id){
   });
 }
 
-userRankingGoofspiel();
+usersRankingGoofspiel();
 
 
 
