@@ -104,7 +104,8 @@ module.exports.matchesForUser = function (user_id, cb){
 
   knex
     .select('matches.id','matches.game_state_id','u1.name as name1','u2.name as name2',
-      'u1.id as id1','u2.id as id2','matches.player1_points','matches.player2_points')
+      'u1.id as id1','u2.id as id2','matches.player1_points','matches.player2_points',
+      'u1.ranking as rank1','u2.ranking as rank2')
     .from('matches')
     .innerJoin('users as u1', function() {
       this.on('u1.id','=','matches.player1_id')
@@ -127,7 +128,7 @@ module.exports.matchesForUser = function (user_id, cb){
 }
 //-----------------------------------------------
 
-module.exports.userName = function (user_id){
+module.exports.userData = function (user_id){
   knex.select('*').from('users')
   .where('users.id',user_id)
   .asCallback(function(err, rows) {
