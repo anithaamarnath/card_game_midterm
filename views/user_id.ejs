@@ -14,6 +14,7 @@
   </head>
 
   <body>
+    <% %>
 <header>
   <% include ./partials/_header %>
 </header>
@@ -24,7 +25,7 @@
           <% const state = ['Waiting P1','Wait P2', 'Active','Inactive']%>
             <% for(let key in data){ %>
               <% let opponent = data[key].name1 %>
-              <% if(userid == data[key].id1) {  %>
+              <% if(user.userid == data[key].id1) {  %>
                 <% opponent = data[key].name2%>
               <% } %>
               <% if(data[key].game_state_id != 4) {  %>
@@ -38,7 +39,7 @@
             <% let opponent = data[key].name1 %>
             <%let points_user = data[key].player2_points %>
             <%let points_opponent = data[key].player1_points %>
-              <% if(userid == data[key].id1) {  %>
+              <% if(user.userid == data[key].id1) {  %>
                 <% opponent = data[key].name2 %>
                 <% points_user = data[key].player1_points %>
                 <% points_opponent = data[key].player2_points %>
@@ -55,12 +56,12 @@
       </div>
 
         <div class="col-md-4 pull-right">
-            <h3>Buttons</h3> <br>
-            <button type="button" class="btn btn-primary btn-lg btn-block btn-sm">Goofspiel [Ranking]</button>
-            <button type="button" class="btn btn-primary btn-lg btn-block btn-sm">Poker [Ranking]</button>
-            <button type="button" class="btn btn-primary btn-lg btn-block btn-sm">Rummy [Ranking]</button>
-            <button type="button" class="btn btn-primary btn-lg btn-block btn-sm">Solitaire [Ranking]</button>
-            <button type="button" class="btn btn-primary btn-lg btn-block btn-sm">Poker [Ranking]</button>
+            <h3>New Game</h3> <br>
+            <button type="button" class="btn btn-primary btn-lg btn-block btn-sm">Goofspiel - Your Rank:  <%= user.userRank %></button>
+            <button type="button" class="btn btn-primary btn-lg btn-block btn-sm">Poker - Your Rank: 0</button>
+            <button type="button" class="btn btn-primary btn-lg btn-block btn-sm">Rummy - Your Rank: 0</button>
+            <button type="button" class="btn btn-primary btn-lg btn-block btn-sm">Solitaire - Your Rank: 0</button>
+            <button type="button" class="btn btn-primary btn-lg btn-block btn-sm">Poker - Your Rank: 0</button>
         </div>
 
       </div>

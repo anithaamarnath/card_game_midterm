@@ -58,7 +58,7 @@ app.get("/test", (req, res) => {
   res.render('test');
 });
 
-
+//-----------------------------------------------------------------------------
 app.post("/login", (req, res) => {
   knex('users').returning('id').insert({'name': req.body.user_id}).asCallback(function(err, output){
     if (err){
@@ -73,7 +73,7 @@ app.post("/login", (req, res) => {
   // console.log(`user_id${req.session.user_id}`)
 
 })
-
+//-----------------------------------------------------------------------------
 app.post("/newgame", (req, res) => {
   knex.select('id').from('matches').whereNot('player1_id', req.session.user_id).andWhere('player2_id', null).asCallback(function(err, number){
     if (!number[0]) {
@@ -101,7 +101,7 @@ app.post("/newgame", (req, res) => {
     }
   })
 })
-
+//------------------------------------------------------------------------------------
 function dealHands (matchId){
   knex('card_lookup').select('id', 'suit').asCallback(function(err,cards){
     let position = '1'
@@ -240,14 +240,29 @@ function generateRandomString () {
 //--------------------------------------------------------------------------
 app.get("/user/:userid", (req, res) => {
   const userid = req.params.userid;
+  // var userName = 'Bobo';
+  // var userRank = null;
     //res.send(userid);
     knexQueries.matchesForUser(userid,function (data) {
           console.log(data);
-          let templateVars = {data: data, userid: userid};
+          let user = userInformation(userid, data[0]);
+          console.log(user);
+          let templateVars = {data: data, user: user};
           res.render("user_id",templateVars);
 
     });
 });
+//--------------------------------------------------
+function userInformation(userid, row){
+  let userName = row.name1;
+  let userRank = row.rank1;
+
+  if (userid ==row.id2){
+    userName = row.name2;
+    userRank = row.rank2;
+  }
+ return {userid: userid, userName: userName, userRank: userRank}
+}
 
 
 
