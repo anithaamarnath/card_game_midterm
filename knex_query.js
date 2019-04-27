@@ -12,7 +12,7 @@ var knex = require('knex')({
 
 //------------query to select inactive games for an user---------------
 
-function archiveMatchesForUser(user_id){
+module.exports.archiveMatchesForUser = function (user_id){
   knex.select('*').from('matches')
   .where(function(){
     this.where('player1_id', user_id).orWhere('player2_id',user_id)
@@ -29,7 +29,7 @@ function archiveMatchesForUser(user_id){
 
 //--------------------------------------------------------
 
-function activeMatchesForUser(user_id, cb){
+module.exports.activeMatchesForUser = function (user_id, cb){
   knex.select('*').from('matches')
   .whereNot('game_state_id', 4)
   .where(function(){
@@ -46,10 +46,10 @@ function activeMatchesForUser(user_id, cb){
 }
 
 //-----------------------------------------------
-function activeMatches(user_id){
+module.exports.activeMatches = function (user_id , cb){
 
   knex
-    .select('matches.id','matches.game_state_id','u1.name as name1','u2.name as name2')
+    .select('matches.id','matches.game_state_id','u1.name as name1','u2.name as name2','u1.id as id1','u2.id as id2')
     .from('matches')
     .innerJoin('users as u1', function() {
       this.on('u1.id','=','matches.player1_id')
@@ -63,17 +63,20 @@ function activeMatches(user_id){
     .whereNot('game_state_id', 4)
     .asCallback(function(err, rows) {
       if(err){
-        return console.error("Connection Error", err);
+        console.error("Connection Error", err);
+        cb();
       }
-      console.log("Active games:");
-      console.log(rows);
+      // console.log("Active games:");
+      // console.log(rows);
+      cb(rows);
     });
 }
 //------------------------------------------------
-function archiveMatches(user_id){
+module.exports.archiveMatches = function (user_id, cb){
 
   knex
-    .select('matches.id','matches.game_state_id','u1.name as name1','u2.name as name2')
+    .select('matches.id','matches.game_state_id','u1.name as name1','u2.name as name2',
+      'u1.id as id1','u2.id as id2','matches.player1_points','matches.player2_points')
     .from('matches')
     .innerJoin('users as u1', function() {
       this.on('u1.id','=','matches.player1_id')
@@ -87,15 +90,44 @@ function archiveMatches(user_id){
     .where('game_state_id', 4)
     .asCallback(function(err, rows) {
       if(err){
-        return console.error("Connection Error", err);
+        console.error("Connection Error", err);
+        cb();
       }
-      console.log("Archive games:");
-      console.log(rows);
+      // console.log("Archive games:");
+      // console.log(rows);
+      cb(rows);
+    });
+}
+
+//-------------------------------------------------
+module.exports.matchesForUser = function (user_id, cb){
+
+  knex
+    .select('matches.id','matches.game_state_id','u1.name as name1','u2.name as name2',
+      'u1.id as id1','u2.id as id2','matches.player1_points','matches.player2_points')
+    .from('matches')
+    .innerJoin('users as u1', function() {
+      this.on('u1.id','=','matches.player1_id')
+    })
+    .innerJoin('users as u2', function() {
+      this.on('u2.id','=','matches.player2_id')
+    })
+    .where(function(){
+      this.where('player1_id', user_id).orWhere('player2_id',user_id)
+    })
+    .asCallback(function(err, rows) {
+      if(err){
+        console.error("Connection Error", err);
+        cb();
+      }
+      // console.log("Archive games:");
+      // console.log(rows);
+      cb(rows);
     });
 }
 //-----------------------------------------------
 
-function userName(user_id){
+module.exports.userName = function (user_id){
   knex.select('*').from('users')
   .where('users.id',user_id)
   .asCallback(function(err, rows) {
@@ -111,7 +143,7 @@ function userName(user_id){
 
 
 
-const user_id = 2;
+//const user_id = 2;
 
 //archiveMatchesForUser(user_id);
 
@@ -119,8 +151,8 @@ const user_id = 2;
 //   console.log(data);
 // });
 
-activeMatches(1);
-archiveMatches(1);
+// activeMatches(1);
+// archiveMatches(1);
 
 
 //userName(user_id);

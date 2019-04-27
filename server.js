@@ -13,6 +13,7 @@ const knexConfig  = require("./knexfile");
 const knex        = require("knex")(knexConfig[ENV]);
 const morgan      = require('morgan');
 const knexLogger  = require('knex-logger');
+const knexQueries = require('./knex_query.js');
 
 const cookieSession = require('cookie-session')
 app.use(cookieSession({
@@ -50,6 +51,11 @@ app.get("/", (req, res) => {
   res.render("user_id");
 
 });
+
+app.get("/test", (req, res) => {
+  res.render('test');
+});
+
 
 app.post("/login", (req, res) => {
   knex('users').returning('id').insert({'name': req.body.user_id}).asCallback(function(err, output){
@@ -230,12 +236,15 @@ function generateRandomString () {
 }
 
 //--------------------------------------------------------------------------
-app.get("/:userid", (req, res) => {
+app.get("/user/:userid", (req, res) => {
+  const userid = req.params.userid;
+    //res.send(userid);
+    knexQueries.matchesForUser(userid,function (data) {
+          console.log(data);
+          let templateVars = {data: data, userid: userid};
+          res.render("user_id",templateVars);
 
-
-
-  res.render("index");
-
+    });
 });
 
 
