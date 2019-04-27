@@ -143,21 +143,6 @@ module.exports.userName = function (user_id){
 
 
 
-//const user_id = 2;
-
-//archiveMatchesForUser(user_id);
-
-// activeMatchesForUser(user_id, function(data){
-//   console.log(data);
-// });
-
-// activeMatches(1);
-// archiveMatches(1);
-
-
-//userName(user_id);
-
-
 
 
 
