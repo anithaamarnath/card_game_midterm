@@ -36,9 +36,9 @@
       <p class='name'><%= user %> <%= player_ranking %></p>
       <div class='player_area'>
         <div class='player_hand'>
-          <% for (let card in player_hand) { %>
+          <% for (card in player_hand) { %>
             <article class='face_up'>
-              <p><%= player_hand[card].value %></p>
+              <p><%= player_hand[card] %></p>
             </article>
           <% } %>
         </div>
