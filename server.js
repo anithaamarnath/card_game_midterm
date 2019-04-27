@@ -68,6 +68,7 @@ app.get("/:gameId", (req, res) => {
         .where('match_id', req.params.gameId)
         .asCallback(function(err, cards){
           // console.log(req.session.user_id, data[0].player1_id, data[0])
+          templateVars.gameId = req.params.gameId
           if (req.session.user_id === data[0].player1_id){
             templateVars.cards_left_deck = false
             templateVars.opponent_bid = false

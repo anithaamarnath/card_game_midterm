@@ -9,7 +9,7 @@
     <script type="text/javascript" src="/scripts/app.js"></script>
     <script type="text/javascript">
       function autoFill(card) {
-        document.getElementById('input1').value = card;
+        document.getElementById('selected_card').value = card;
       }
     </script>
   </head>
@@ -74,11 +74,10 @@
           <% } %>
         </div>
         <div class='submit'>
-          <form>
-          <p>
-            <label>Text Input: </label>
-            <input type="text" id="input1">
-          </p>
+          <form class='card_select_form' method='POST' action="/<%= gameId %>" >
+            <input type="text" id="selected_card" name="card">
+            <button type="submit"> OK </button>
+        </form>
         </div>
       </div>
     </div>
