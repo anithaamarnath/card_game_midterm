@@ -48,9 +48,11 @@ app.use("/api/users", usersRoutes(knex));
 // Home page
 app.get("/", (req, res) => {
 
-  res.render("user_id");
+  res.render("test");
 
 });
+
+//-------------------------------------------------------------------------
 
 app.get("/test", (req, res) => {
   res.render('test');
