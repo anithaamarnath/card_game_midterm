@@ -1,5 +1,7 @@
 html, body {
   overflow: hidden;
+  background-image: url(../images/cardgameBackground.png);
+  background-size: 100vw;
   background-color: green;
 }
 
@@ -15,7 +17,7 @@ html, body {
 .opponent_hand {
   height: 20vh;
   width: 80vw;
-  background-color: red;
+  /*background-color: red;*/
   display: flex;
   justify-content: space-between;
   padding-right: .5em;
@@ -24,7 +26,7 @@ html, body {
 .player_area {
   height: 150px;
   width: 80vw;
-  background-color: blue;
+  /*background-color: blue;*/
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -33,16 +35,16 @@ html, body {
 .prize_and_bids {
   height: 30vh;
   width: 50vw;
-  background-color: yellow;
+/*  background-color: yellow;*/
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .card {
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.3);
   height: 150px;
-  width: 150px;
+  width: 140px;
   margin: 10px;
   display: flex;
 }
@@ -54,18 +56,20 @@ html, body {
 }
 
 .player_hand {
-  width: 100%;
+  width: 80%;
   height: 100%;
-  background-color: purple;
+  /*background-color: purple;*/
   display: flex;
   justify-content: space-between;
   padding-right: .5em;
+  align-items: center;
 }
 
 .submit {
   background-color: yellow;
   height:100px;
   width: 100px;
+  display: inline;
 }
 
 .face_up {
@@ -75,7 +79,7 @@ html, body {
 }
 
 .player_hand .face_up {
-   margin-left: .5em;
+   margin-left: .2em;
 }
 
 .opponent_hand .face_down {
@@ -100,9 +104,37 @@ html, body {
 button {
   height: 100%;
   width: 100%;
+  border-radius: 50px;
 }
 
 .card_select_form {
   height: 100%;
   width: 100%;
 }
+
+.name {
+  color: white;
+}
+
+.points {
+  color: white;
+}
+
+.hand_card:hover {
+  position: relative;
+  height: 120px;
+  width: 10vw;
+  z-index: 10;
+}
+
+.selected {
+  align-self: flex-start;
+}
+
+
+
+
+
+
+
+

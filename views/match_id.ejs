@@ -9,7 +9,12 @@
     <script type="text/javascript" src="/scripts/app.js"></script>
     <script type="text/javascript">
       function autoFill(card) {
+        let elems = document.querySelectorAll(".hand_card");
+        elems.forEach.call(elems, function(el) {
+            el.classList.remove("selected");
+        });
         document.getElementById('selected_card').value = card;
+        document.getElementById(card).classList.add('selected')
       }
     </script>
   </head>
@@ -19,10 +24,6 @@
     <div class='game_board'>
       <div class='opponet'>
         <div class='opponent_hand'>
-          <!-- <% let length = player_hand.length %>
-          <% if (!opponent_bid) { %>
-            <% length = length - 1 %>
-          <% } %> -->
           <% for (i = 0; i < opponent_hand_size; i++) { %>
             <article class='face_down bid'>
             </article>
@@ -68,7 +69,7 @@
       <div class='player_area'>
         <div class='player_hand'>
           <% for (card in player_hand) { %>
-            <a href='#' class='face_up' onclick="autoFill(<%= player_hand[card].id %>); return true;">
+            <a href='#' class='face_up hand_card' id='<%= player_hand[card].id %>' onclick="autoFill(<%= player_hand[card].id %>); return true;">
               <p><%= player_hand[card].value %></p>
             </a>
           <% } %>
