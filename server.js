@@ -143,6 +143,9 @@ app.get("/:gameId", (req, res) => {
           })
           console.log('templatevars', templateVars)
           res.render("match_id", templateVars)
+    })
+  })
+})
 
 
 //-------------------------------------------------------------------------
@@ -332,16 +335,16 @@ function generateRandomString () {
 
 
 //--------------------------------------------------------------------------
-app.get("/user/:userid", (req, res) => {
-  const userid = req.params.userid;
-    //res.send(userid);
-    knexQueries.matchesForUser(userid,function (data) {
-          console.log(data);
-          let templateVars = {data: data, userid: userid};
-          res.render("user_id",templateVars);
+// app.get("/user/:userid", (req, res) => {
+//   const userid = req.params.userid;
+//     //res.send(userid);
+//     knexQueries.matchesForUser(userid,function (data) {
+//           console.log(data);
+//           let templateVars = {data: data, userid: userid, };
+//           res.render("user_id",templateVars);
 
-    });
-});
+//     });
+// });
 
 
 
