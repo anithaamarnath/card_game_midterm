@@ -120,17 +120,27 @@ button {
   color: white;
 }
 
+.hand_card {
+  overflow: hidden
+}
+
 .hand_card:hover {
   position: relative;
-  height: 120px;
-  width: 10vw;
+  height: 140px;
+  width: 100px;
   z-index: 10;
 }
 
 .selected {
   align-self: flex-start;
+  width: 100px;
+  height: 140px;
 }
 
+.card_img {
+  width: 100px;
+  height: 140px;
+}
 
 
 

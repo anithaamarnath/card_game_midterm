@@ -70,7 +70,7 @@
         <div class='player_hand'>
           <% for (card in player_hand) { %>
             <a href='#' class='face_up hand_card' id='<%= player_hand[card].id %>' onclick="autoFill(<%= player_hand[card].id %>); return true;">
-              <p><%= player_hand[card].value %></p>
+              <img src="/images/<%= player_hand[card].value %>H.png" alt='<%= player_hand[card].value %>' class='card_img'>
             </a>
           <% } %>
         </div>
