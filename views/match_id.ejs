@@ -68,8 +68,8 @@
       <div class='player_area'>
         <div class='player_hand'>
           <% for (card in player_hand) { %>
-            <a href='#' class='face_up' onclick="autoFill(<%= player_hand[card] %>); return true;">
-              <p><%= player_hand[card] %></p>
+            <a href='#' class='face_up' onclick="autoFill(<%= player_hand[card].id %>); return true;">
+              <p><%= player_hand[card].value %></p>
             </a>
           <% } %>
         </div>

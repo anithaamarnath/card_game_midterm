@@ -64,7 +64,7 @@ app.get("/:gameId", (req, res) => {
     .where('matches.id', req.params.gameId)
     .asCallback(function(err, data){
       knex('cards')
-        .select('position_id', 'value')
+        .select('position_id', 'value', 'card_id')
         .join('card_lookup', {'card_lookup.id': 'card_id'})
         .where('match_id', req.params.gameId)
         .asCallback(function(err, cards){
@@ -85,7 +85,7 @@ app.get("/:gameId", (req, res) => {
             templateVars.prize = null
             for (let card in cards) {
               if (cards[card].position_id === 1) {
-                templateVars.player_hand.push(cards[card].value)
+                templateVars.player_hand.push({value: cards[card].value, id: cards[card].card_id})
               }
               else if (cards[card].position_id === 7) {
                 templateVars.prize = cards[card].value
@@ -119,7 +119,7 @@ app.get("/:gameId", (req, res) => {
             templateVars.prize = null
             for (let card in cards) {
               if (cards[card].position_id === 2) {
-                templateVars.player_hand.push(cards[card].value)
+                templateVars.player_hand.push({value: cards[card].value, id: cards[card].card_id})
               }
               else if (cards[card].position_id === 7) {
                 templateVars.prize = cards[card].value
@@ -139,7 +139,7 @@ app.get("/:gameId", (req, res) => {
             }
           }
           templateVars.player_hand.sort(function(a, b) {
-            return a - b
+            return a.value - b.value
           })
           console.log('templatevars', templateVars)
           res.render("match_id", templateVars)
