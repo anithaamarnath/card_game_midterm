@@ -372,12 +372,16 @@ function userInformation(userid, row){
 
 app.get("/user", (req, res) => {
   knexQueries.usersRankingGoofspiel(function(data){
-    let templateVars = {data: data};
+    let user = 'Anonymous';
+    if(req.session.user_id){
+      user = req.session.user_id;
+    }
+    let templateVars = {data: data, user: req.session.user_id};
     res.render("user",templateVars);
   });
 });
 
-
+//-------------------------------------------------------
 
 
 app.listen(PORT, '0.0.0.0', () => {
