@@ -130,7 +130,7 @@ module.exports.matchesForUser = function (user_id, cb){
 
 module.exports.usersRankingGoofspiel = function (cb){
   knex.select('*').from('users')
-  .orderBy('ranking')
+  .orderBy('ranking','desc')
   .asCallback(function(err, rows) {
     if(err){
       return console.error("Connection Error", err);
