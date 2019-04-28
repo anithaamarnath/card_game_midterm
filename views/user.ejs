@@ -24,7 +24,8 @@
         <h3>Goofspiel Users Ranking</h3> <br>
             <% for(let key in data){ %>
 
-            <div class="p-2 alert alert-primary"> USER <%= data[key].name %> - RANK <%= data[key].ranking %></div>
+            <div class="p-2 alert alert-primary">
+            <a class ="alert-link" href="/user/<%= data[key].id%> "> USER <%= data[key].name %> - RANK <%= data[key].ranking %></div>
 
 
             <% }; %>
