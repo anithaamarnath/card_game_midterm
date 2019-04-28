@@ -160,7 +160,7 @@ app.get("/match/:gameId", (req, res) => {
 //-----------------------------------------------------------------------------
 app.post("/login", (req, res) => {
   knex('users').select('id').where({'name': req.body.user}).asCallback(function(err, output){
-    if (output){
+    if (output[0]){
       req.session.user_id = output[0].id
       res.redirect(`/user/${req.session.user_id}`)
     }
