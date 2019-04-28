@@ -57,7 +57,7 @@ app.get("/match/:gameId", (req, res) => {
     templateVars.user_cookie_id = req.session.user_id
   }
   knex('matches')
-    .select('u1.name as name1','u2.name as name2', 'u1.ranking as ranking1', 'u2.ranking as ranking2', 'player1_points', 'player2_points', 'player1_id', 'player2_id')
+    .select('u1.name as name1','u2.name as name2', 'u1.ranking as ranking1', 'u2.ranking as ranking2', 'player1_points', 'player2_points', 'player1_id', 'player2_id', 'game_state_id')
     .innerJoin('users as u1', function() {
       this.on('u1.id','=','matches.player1_id')
     })
@@ -71,6 +71,7 @@ app.get("/match/:gameId", (req, res) => {
         .join('card_lookup', {'card_lookup.id': 'card_id'})
         .where('match_id', req.params.gameId)
         .asCallback(function(err, cards){
+          if (data[0].game_state_id != 4){
           // console.log(req.session.user_id, data[0].player1_id, data[0])
           templateVars.gameId = req.params.gameId
           templateVars.player_hand = []
@@ -211,8 +212,109 @@ app.get("/match/:gameId", (req, res) => {
             console.log('templatevars', templateVars)
             res.render("match_id", templateVars)
           }
-    })
+        }
+        else {
+          templateVars.player_name = data[0].name1
+          templateVars.opponent_name = data[0].name2
+          templateVars.player_ranking = data[0].ranking1
+          templateVars.opponent_ranking = data[0].ranking2
+          templateVars.player_points = data[0].player1_points
+          templateVars.opponent_points = data[0].player2_points
+          console.log('cards ',cards)
+          for (let card in cards){
+            if (cards[card].position_id == 112) {
+              templateVars.p1_t1 = cards[card].value
+            } else if (cards[card].position_id == 212) {
+              templateVars.p2_t1 = cards[card].value
+            } else if (cards[card].position_id == 312) {
+              templateVars.pz_t1 = cards[card].value
+            } else if (cards[card].position_id == 111) {
+              templateVars.p1_t2 = cards[card].value
+            } else if (cards[card].position_id == 211) {
+              templateVars.p2_t2 = cards[card].value
+            } else if (cards[card].position_id == 311) {
+              templateVars.pz_t2 = cards[card].value
+            } else if (cards[card].position_id == 110) {
+              templateVars.p1_t3 = cards[card].value
+            } else if (cards[card].position_id == 210) {
+              templateVars.p2_t3 = cards[card].value
+            } else if (cards[card].position_id == 310) {
+              templateVars.pz_t3 = cards[card].value
+            } else if (cards[card].position_id == 19) {
+              templateVars.p1_t4 = cards[card].value
+            } else if (cards[card].position_id == 29) {
+              templateVars.p2_t4 = cards[card].value
+            } else if (cards[card].position_id == 39) {
+              templateVars.pz_t4 = cards[card].value
+            } else if (cards[card].position_id == 18) {
+              templateVars.p1_t5 = cards[card].value
+            } else if (cards[card].position_id == 28) {
+              templateVars.p2_t5 = cards[card].value
+            } else if (cards[card].position_id == 38) {
+              templateVars.pz_t5 = cards[card].value
+            } else if (cards[card].position_id == 17) {
+              templateVars.p1_t6 = cards[card].value
+            } else if (cards[card].position_id == 27) {
+              templateVars.p2_t6 = cards[card].value
+            } else if (cards[card].position_id == 37) {
+              templateVars.pz_t6 = cards[card].value
+            } else if (cards[card].position_id == 16) {
+              templateVars.p1_t7 = cards[card].value
+            } else if (cards[card].position_id == 26) {
+              templateVars.p2_t7 = cards[card].value
+            } else if (cards[card].position_id == 36) {
+              templateVars.pz_t7 = cards[card].value
+            } else if (cards[card].position_id == 15) {
+              templateVars.p1_t8 = cards[card].value
+            } else if (cards[card].position_id == 25) {
+              templateVars.p2_t8 = cards[card].value
+            } else if (cards[card].position_id == 35) {
+              templateVars.pz_t8 = cards[card].value
+            } else if (cards[card].position_id == 14) {
+              templateVars.p1_t9 = cards[card].value
+            } else if (cards[card].position_id == 24) {
+              templateVars.p2_t9 = cards[card].value
+            } else if (cards[card].position_id == 34) {
+              templateVars.pz_t9 = cards[card].value
+            } else if (cards[card].position_id == 13) {
+              templateVars.p1_t10 = cards[card].value
+            } else if (cards[card].position_id == 23) {
+              templateVars.p2_t10 = cards[card].value
+            } else if (cards[card].position_id == 33) {
+              templateVars.pz_t10 = cards[card].value
+            } else if (cards[card].position_id == 12) {
+              templateVars.p1_t11 = cards[card].value
+            } else if (cards[card].position_id == 22) {
+              templateVars.p2_t11 = cards[card].value
+            } else if (cards[card].position_id == 32) {
+              templateVars.pz_t11 = cards[card].value
+            } else if (cards[card].position_id == 11) {
+              templateVars.p1_t12 = cards[card].value
+            } else if (cards[card].position_id == 21) {
+              templateVars.p2_t12 = cards[card].value
+            } else if (cards[card].position_id == 31) {
+              templateVars.pz_t12 = cards[card].value
+            } else if (cards[card].position_id == 10) {
+              templateVars.p1_t13 = cards[card].value
+            } else if (cards[card].position_id == 20) {
+              templateVars.p2_t13 = cards[card].value
+            } else if (cards[card].position_id == 30) {
+              templateVars.pz_t13 = cards[card].value
+            }
+          }
+          if (req.session.user_id) {
+            templateVars.user = req.session.user_id
+          }
+          res.render('finished_match', templateVars)
+        }
+      })
   })
+})
+
+app.get("/finish_test", (req, res) => {
+  let templateVars = {}
+  templateVars.user = 'test'
+  res.render('finished_match', templateVars)
 })
 
 
@@ -445,6 +547,7 @@ function generateRandomString () {
 
 
 //--------------------------------------------------------------------------
+
 app.get("/user/:userid", (req, res) => {
   const userid = req.params.userid;
   let session = 'Anonymous';
@@ -502,7 +605,13 @@ app.get("/user", (req, res) => {
 });
 
 
+
 //-------------------------------------------------------
+app.post("/logout",  (req, res) =>{
+
+  req.session.user_id = null;
+  res.redirect('/');
+});
 
 
 app.listen(PORT, '0.0.0.0', () => {
