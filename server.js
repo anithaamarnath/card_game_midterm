@@ -53,6 +53,9 @@ app.get("/", (req, res) => {
 
 app.get("/match/:gameId", (req, res) => {
   let templateVars = {}
+  if (req.session.user_id){
+    templateVars.user_cookie_id = req.session.user_id
+  }
   knex('matches')
     .select('u1.name as name1','u2.name as name2', 'u1.ranking as ranking1', 'u2.ranking as ranking2', 'player1_points', 'player2_points', 'player1_id', 'player2_id')
     .innerJoin('users as u1', function() {
@@ -70,19 +73,23 @@ app.get("/match/:gameId", (req, res) => {
         .asCallback(function(err, cards){
           // console.log(req.session.user_id, data[0].player1_id, data[0])
           templateVars.gameId = req.params.gameId
+          templateVars.player_hand = []
+          templateVars.opponent_hand_size = 0
+          templateVars.player_bid = null
+          templateVars.prize = null
+          templateVars.player_last_card = null
+          templateVars.opponent_last_card = null
+          templateVars.last_prize = null
+          templateVars.cards_left_deck = 0
+          templateVars.cards_left_deck = false
+          templateVars.opponent_bid = false
           if (req.session.user_id === data[0].player1_id){
-            templateVars.cards_left_deck = false
-            templateVars.opponent_bid = false
             templateVars.user = data[0].name1
             templateVars.opponent_name = data[0].name2
             templateVars.player_ranking = data[0].ranking1
             templateVars.opponent_ranking = data[0].ranking2
             templateVars.player_points = data[0].player1_points
             templateVars.opponent_points = data[0].player2_points
-            templateVars.player_hand = []
-            templateVars.opponent_hand_size = 0
-            templateVars.player_bid = null
-            templateVars.prize = null
             for (let card in cards) {
               if (cards[card].position_id === 1) {
                 templateVars.player_hand.push({value: cards[card].value, id: cards[card].card_id})
@@ -97,26 +104,31 @@ app.get("/match/:gameId", (req, res) => {
                 templateVars.opponent_bid = true
               }
               else if (cards[card].position_id === 3) {
-                templateVars.cards_left_deck = true
+                templateVars.cards_left_deck ++
               }
               else if (cards[card].position_id === 2) {
                 templateVars.opponent_hand_size ++
               }
             }
+            for (let oldCard in cards) {
+              if (cards[oldCard].position_id == `1${templateVars.cards_left_deck + 1}`){
+                templateVars.player_last_card = cards[oldCard].value
+              }
+              else if (cards[oldCard].position_id == `2${templateVars.cards_left_deck + 1}`){
+                templateVars.opponent_last_card = cards[oldCard].value
+              }
+              else if (cards[oldCard].position_id == `3${templateVars.cards_left_deck + 1}`){
+                templateVars.last_prize = cards[oldCard].value
+              }
+            }
           }
           else if (req.session.user_id === data[0].player2_id) {
-            templateVars.cards_left_deck = false
-            templateVars.opponent_bid = false
             templateVars.user = data[0].name2
             templateVars.opponent_name = data[0].name1
             templateVars.player_ranking = data[0].ranking2
             templateVars.opponent_ranking = data[0].ranking1
             templateVars.player_points = data[0].player2_points
             templateVars.opponent_points = data[0].player1_points
-            templateVars.player_hand = []
-            templateVars.opponent_hand_size = 0
-            templateVars.player_bid = null
-            templateVars.prize = null
             for (let card in cards) {
               if (cards[card].position_id === 2) {
                 templateVars.player_hand.push({value: cards[card].value, id: cards[card].card_id})
@@ -131,10 +143,60 @@ app.get("/match/:gameId", (req, res) => {
                 templateVars.opponent_bid = true
               }
               else if (cards[card].position_id === 3) {
-                templateVars.cards_left_deck = true
+                templateVars.cards_left_deck ++
               }
               else if (cards[card].position_id === 1) {
                 templateVars.opponent_hand_size ++
+              }
+            }
+            for (let oldCard in cards) {
+              if (cards[oldCard].position_id == `1${templateVars.cards_left_deck + 1}`){
+                templateVars.player_last_card = cards[oldCard].value
+              }
+              else if (cards[oldCard].position_id == `2${templateVars.cards_left_deck + 1}`){
+                templateVars.opponent_last_card = cards[oldCard].value
+              }
+              else if (cards[oldCard].position_id == `3${templateVars.cards_left_deck + 1}`){
+                templateVars.last_prize = cards[oldCard].value
+              }
+            }
+          }
+          else{
+            templateVars.user = data[0].name1
+            templateVars.opponent_name = data[0].name2
+            templateVars.player_ranking = data[0].ranking1
+            templateVars.opponent_ranking = data[0].ranking2
+            templateVars.player_points = data[0].player1_points
+            templateVars.opponent_points = data[0].player2_points
+            for (let card in cards) {
+              if (cards[card].position_id === 1) {
+                templateVars.player_hand.push({value: 0, id: 0})
+              }
+              else if (cards[card].position_id === 7) {
+                templateVars.prize = cards[card].value
+              }
+              else if (cards[card].position_id === 5) {
+                templateVars.player_bid = null
+              }
+              else if (cards[card].position_id === 6) {
+                templateVars.opponent_bid = true
+              }
+              else if (cards[card].position_id === 3) {
+                templateVars.cards_left_deck ++
+              }
+              else if (cards[card].position_id === 2) {
+                templateVars.opponent_hand_size ++
+              }
+            }
+            for (let oldCard in cards) {
+              if (cards[oldCard].position_id == `1${templateVars.cards_left_deck + 1}`){
+                templateVars.player_last_card = cards[oldCard].value
+              }
+              else if (cards[oldCard].position_id == `2${templateVars.cards_left_deck + 1}`){
+                templateVars.opponent_last_card = cards[oldCard].value
+              }
+              else if (cards[oldCard].position_id == `3${templateVars.cards_left_deck + 1}`){
+                templateVars.last_prize = cards[oldCard].value
               }
             }
           }
@@ -160,7 +222,7 @@ app.get("/match/:gameId", (req, res) => {
 
 app.post("/login", (req, res) => {
   knex('users').select('id').where({'name': req.body.user}).asCallback(function(err, output){
-    if (output){
+    if (output[0]){
       req.session.user_id = output[0].id
       res.redirect(`/user/${req.session.user_id}`)
     }
@@ -258,6 +320,9 @@ app.post("/match/:gameId", (req, res) => {
         console.log('correct path')
         placeBid(6, 1, req.params.gameId, req.body.card, gameState, res, 2)
       }
+      else {
+        res.redirect(`/match/${req.params.gameId}`)
+      }
     }
   })
 })
@@ -287,30 +352,33 @@ function placeBid (newPosition, newGamestate, gameId, card, gameState, res, othe
 
 function newTurn (matchId, res) {
   knex('matches').where({'id': matchId}).update({'game_state_id': '3', 'last_move': new Date()}).asCallback(function(err){})
-  knex('cards').select('value').where({'match_id': matchId}).andWhere({'position_id': '7'}).join('card_lookup', {'card_lookup.id': 'card_id'}).asCallback(function(err, prize){
-    knex('cards').select('value').where({'match_id': matchId}).andWhere({'position_id': '5'}).join('card_lookup', {'card_lookup.id': 'card_id'}).asCallback(function(err, player1Card){
-      knex('cards').select('value').where({'match_id': matchId}).andWhere({'position_id': '6'}).join('card_lookup', {'card_lookup.id': 'card_id'}).asCallback(function(err, player2Card){
-        if (!player1Card[0] || !player2Card[0] || !prize[0]) {
-          console.log('============= redirecting after error')
-          console.log(`p1 card ${player1Card[0]}, p2 card ${player2Card[0]}, prize ${prize[0]}`)
-          res.redirect(`/match/${matchId}`)
-        }
-        else {
-          console.log(`p1 card ${player1Card[0].value}, p2 card ${player2Card[0].value}, prize ${prize[0].value}`, player1Card, player2Card, prize)
-          if (player1Card[0].value > player2Card[0].value){
-            awardPoints('player1_points', prize[0].value, matchId)
+  knex('cards').select('id').where({'match_id': matchId}).andWhere({'position_id': '3'}).asCallback(function(err, deck){
+    const turn = deck.length - 13
+    knex('cards').select('value').where({'match_id': matchId}).andWhere({'position_id': '7'}).join('card_lookup', {'card_lookup.id': 'card_id'}).asCallback(function(err, prize){
+      knex('cards').select('value').where({'match_id': matchId}).andWhere({'position_id': '5'}).join('card_lookup', {'card_lookup.id': 'card_id'}).asCallback(function(err, player1Card){
+        knex('cards').select('value').where({'match_id': matchId}).andWhere({'position_id': '6'}).join('card_lookup', {'card_lookup.id': 'card_id'}).asCallback(function(err, player2Card){
+          if (!player1Card[0] || !player2Card[0] || !prize[0]) {
+            console.log('============= redirecting after error')
+            console.log(`p1 card ${player1Card[0]}, p2 card ${player2Card[0]}, prize ${prize[0]}`)
+            res.redirect(`/match/${matchId}`)
           }
-          else if (player1Card[0].value < player2Card[0].value){
-            awardPoints('player2_points', prize[0].value, matchId)
-          }
-          knex('cards').where({'match_id': matchId}).andWhere({'position_id': '7'}).update({'position_id': '4'}).asCallback(function(err){
-            knex('cards').where({'match_id': matchId}).andWhere({'position_id': '5'}).update({'position_id': '4'}).asCallback(function(err){
-              knex('cards').where({'match_id': matchId}).andWhere({'position_id': '6'}).update({'position_id': '4'}).asCallback(function(err){
-                newPrize(matchId, res)
+          else {
+            console.log(`p1 card ${player1Card[0].value}, p2 card ${player2Card[0].value}, prize ${prize[0].value}`, player1Card, player2Card, prize)
+            if (player1Card[0].value > player2Card[0].value){
+              awardPoints('player1_points', prize[0].value, matchId)
+            }
+            else if (player1Card[0].value < player2Card[0].value){
+              awardPoints('player2_points', prize[0].value, matchId)
+            }
+            knex('cards').where({'match_id': matchId}).andWhere({'position_id': '7'}).update({'position_id': `3${deck.length}`}).asCallback(function(err){
+              knex('cards').where({'match_id': matchId}).andWhere({'position_id': '5'}).update({'position_id': `1${deck.length}`}).asCallback(function(err){
+                knex('cards').where({'match_id': matchId}).andWhere({'position_id': '6'}).update({'position_id': `2${deck.length}`}).asCallback(function(err){
+                  newPrize(matchId, res)
+                })
               })
             })
-          })
-        }
+          }
+        })
       })
     })
   })
@@ -332,9 +400,33 @@ function awardPoints (winner, prize, matchId) {
 
 
 function newPrize (matchId, res) {
+  let player1_rank_update = 0
+  let player2_rank_update = 0
   knex('cards').select('card_id').where({'match_id': matchId}).andWhere({'position_id': '3'}).asCallback(function(err, cards){
     if (cards.length === 0 ) {
       knex('matches').where({'id': matchId}).update({'game_state_id': '4'}).asCallback(function(err){         //gameover
+        knex('matches').where({'id': matchId}).select('player1_points', 'player2_points', 'player1_id', 'player2_id').asCallback(function(err, points){
+          knex('users').where({'id': points[0].player1_id}).select('ranking').asCallback(function(err, rank1){
+            knex('users').where({'id': points[0].player2_id}).select('ranking').asCallback(function(err, rank2){
+              if (points[0].player1_points > points[0].player2_points) {
+                player1_rank_update = 10 - (rank1[0].ranking / 100) + (rank2[0].ranking / 100)
+                player2_rank_update = - player1_rank_update
+              }
+              else if (points[0].player1_points < points[0].player2_points) {
+                player2_rank_update = 10 - (rank2[0].ranking / 100) + (rank1[0].ranking / 100)
+                player1_rank_update = - player2_rank_update
+              } else {
+                player1_rank_update = - (rank1[0].ranking / 100) + (rank2[0].ranking / 100)
+                player2_rank_update = - (rank2[0].ranking / 100) + (rank1[0].ranking / 100)
+              }
+              const player1_new_rank = Math.round(player1_rank_update) + rank1[0].ranking
+              const player2_new_rank = Math.round(player2_rank_update) + rank2[0].ranking
+              knex('users').where({'id': points[0].player1_id}).update({'ranking': player1_new_rank}).asCallback(function(err){
+                knex('users').where({'id': points[0].player2_id}).update({'ranking': player2_new_rank}).asCallback(function(err){})
+              })
+            })
+          })
+        })
         res.redirect(`/match/${matchId}`)
       })
     } else {
@@ -363,10 +455,20 @@ app.get("/user/:userid", (req, res) => {
   const userid = req.params.userid;
     knexQueries.matchesForUser(userid,function (data) {
           console.log(data);
-          let user = userInformation(userid, data[0]);
-          console.log(user);
-          let templateVars = {data: data, user: user.userName, userRank: user.userRank, userid: user.userid};
-          res.render("user_id",templateVars);
+          if (data.length != 0){
+            let user = userInformation(userid, data[0]);
+            console.log(user);
+            let templateVars = {data: data, user: user.userName, userRank: user.userRank, userid: user.userid};
+            res.render("user_id",templateVars);
+          }
+          else {
+            knex('users').select('name', 'ranking').where('id', req.session.user_id).asCallback(function(err, info){
+              console.log(info)
+              let templateVars = {'user': info[0].name, 'userRank': info[0].ranking, data: data}
+              console.log('test', data)
+              res.render("user_id",templateVars);
+            })
+          }
 
     });
 });
