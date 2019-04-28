@@ -1,0 +1,36 @@
+.container {
+  margin-top: 100px;
+  margin-right: 15vw;
+  margin-left: 15vw;
+  display: flex;
+}
+
+p {
+  margin: 0px;
+}
+
+.container .card {
+  height: 70px;
+  width:  50px;
+}
+
+.turn_row {
+  display: flex;
+  flex-direction: column;
+  margin-left: 5vw;
+}
+.turn {
+
+  margin-top: 15px;
+}
+
+.cards {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.summary_img {
+  height: 70px;
+  width: 50px;
+}
