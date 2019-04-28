@@ -151,10 +151,10 @@ app.get("/match/:gameId", (req, res) => {
               }
             }
             for (let oldCard in cards) {
-              if (cards[oldCard].position_id == `1${templateVars.cards_left_deck + 1}`){
+              if (cards[oldCard].position_id == `2${templateVars.cards_left_deck + 1}`){
                 templateVars.player_last_card = cards[oldCard].value
               }
-              else if (cards[oldCard].position_id == `2${templateVars.cards_left_deck + 1}`){
+              else if (cards[oldCard].position_id == `1${templateVars.cards_left_deck + 1}`){
                 templateVars.opponent_last_card = cards[oldCard].value
               }
               else if (cards[oldCard].position_id == `3${templateVars.cards_left_deck + 1}`){
@@ -352,14 +352,20 @@ app.post("/login", (req, res) => {
 app.post("/newgame", (req, res) => {
   knex.select('id').from('matches').whereNot('player1_id', req.session.user_id).andWhere('player2_id', null).asCallback(function(err, number){
     if (!number[0]) {
-      knex.insert({player1_id: req.session.user_id, player1_points: '0', player2_points: '0', game_state_id: '3', last_move: new Date()})
-          .into('matches')
-          .asCallback(function(err){
-            if (err){
-              console.log(err)
-            }
-            res.redirect(`/`)
-          })
+      knex.from('matches').where('player1_id', req.session.user_id).andWhere('player2_id', null).select('id').asCallback(function(err, stop){
+        if (!stop[0]) {
+          knex.insert({player1_id: req.session.user_id, player1_points: '0', player2_points: '0', game_state_id: '3', last_move: new Date()})
+              .into('matches')
+              .asCallback(function(err){
+                if (err){
+                  console.log(err)
+                }
+                res.redirect(`/user/${req.session.user_id}`)
+              })
+        } else{
+          res.redirect(`/user/${req.session.user_id}`)
+        }
+      })
     }
     else {
       knex('matches')
@@ -510,15 +516,15 @@ function newPrize (matchId, res) {
           knex('users').where({'id': points[0].player1_id}).select('ranking').asCallback(function(err, rank1){
             knex('users').where({'id': points[0].player2_id}).select('ranking').asCallback(function(err, rank2){
               if (points[0].player1_points > points[0].player2_points) {
-                player1_rank_update = 10 - (rank1[0].ranking / 100) + (rank2[0].ranking / 100)
+                player1_rank_update = 10 - (rank1[0].ranking / 10) + (rank2[0].ranking / 10)
                 player2_rank_update = - player1_rank_update
               }
               else if (points[0].player1_points < points[0].player2_points) {
-                player2_rank_update = 10 - (rank2[0].ranking / 100) + (rank1[0].ranking / 100)
+                player2_rank_update = 10 - (rank2[0].ranking / 10) + (rank1[0].ranking / 10)
                 player1_rank_update = - player2_rank_update
               } else {
-                player1_rank_update = - (rank1[0].ranking / 100) + (rank2[0].ranking / 100)
-                player2_rank_update = - (rank2[0].ranking / 100) + (rank1[0].ranking / 100)
+                player1_rank_update = - (rank1[0].ranking / 10) + (rank2[0].ranking / 10)
+                player2_rank_update = - (rank2[0].ranking / 10) + (rank1[0].ranking / 10)
               }
               const player1_new_rank = Math.round(player1_rank_update) + rank1[0].ranking
               const player2_new_rank = Math.round(player2_rank_update) + rank2[0].ranking
