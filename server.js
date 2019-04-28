@@ -376,18 +376,18 @@ function newPrize (matchId, res) {
           knex('users').where({'id': points[0].player1_id}).select('ranking').asCallback(function(err, rank1){
             knex('users').where({'id': points[0].player2_id}).select('ranking').asCallback(function(err, rank2){
               if (points[0].player1_points > points[0].player2_points) {
-                player1_rank_update = 10 - (rank1[0].rank / 100) + (rank2[0].rank / 100)
+                player1_rank_update = 10 - (rank1[0].ranking / 100) + (rank2[0].ranking / 100)
                 player2_rank_update = - player1_rank_update
               }
               else if (points[0].player1_points < points[0].player2_points) {
-                player2_rank_update = 10 - (rank2[0].rank / 100) + (rank1[0].rank / 100)
+                player2_rank_update = 10 - (rank2[0].ranking / 100) + (rank1[0].ranking / 100)
                 player1_rank_update = - player2_rank_update
               } else {
-                player1_rank_update = - (rank1[0].rank / 100) + (rank2[0].rank / 100)
-                player2_rank_update = - (rank2[0].rank / 100) + (rank1[0].rank / 100)
+                player1_rank_update = - (rank1[0].ranking / 100) + (rank2[0].ranking / 100)
+                player2_rank_update = - (rank2[0].ranking / 100) + (rank1[0].ranking / 100)
               }
-              const player1_new_rank = player1_rank_update + rank1[0].rank
-              const player2_new_rank = player2_rank_update + rank2[0].rank
+              const player1_new_rank = player1_rank_update + rank1[0].ranking
+              const player2_new_rank = player2_rank_update + rank2[0].ranking
               knex('users').where({'id': points[0].player1_id}).update({'ranking': player1_new_rank}).asCallback(function(err){
                 knex('users').where({'id': points[0].player2_id}).update({'ranking': player2_new_rank}).asCallback(function(err){})
               })
