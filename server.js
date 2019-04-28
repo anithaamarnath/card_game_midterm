@@ -242,6 +242,7 @@ app.post("/login", (req, res) => {
   // })
   // console.log(`user_id${req.session.user_id}`)
 
+
 app.post("/newgame", (req, res) => {
   knex.select('id').from('matches').whereNot('player1_id', req.session.user_id).andWhere('player2_id', null).asCallback(function(err, number){
     if (!number[0]) {
@@ -446,6 +447,7 @@ function generateRandomString () {
 //--------------------------------------------------------------------------
 app.get("/user/:userid", (req, res) => {
   const userid = req.params.userid;
+
     knexQueries.matchesForUser(userid,function (data) {
           console.log(data);
           if (data.length != 0){
@@ -455,11 +457,15 @@ app.get("/user/:userid", (req, res) => {
             res.render("user_id",templateVars);
           }
           else {
-            knex('users').select('name', 'ranking').where('id', req.session.user_id).asCallback(function(err, info){
+            knex('users').select('name', 'ranking').where('id', userid).asCallback(function(err, info){
               console.log(info)
-              let templateVars = {'user': info[0].name, 'userRank': info[0].ranking, data: data}
-              console.log('test', data)
-              res.render("user_id",templateVars);
+              if (info.length != 0){
+                let templateVars = {'user': info[0].name, 'userRank': info[0].ranking, data: data, userid: userid}
+                console.log('test', data)
+                res.render("user_id",templateVars);
+              }else {//user not in database
+                res.send("This user does not exist");
+              }
             })
           }
 
