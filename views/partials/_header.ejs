@@ -1,14 +1,16 @@
 <nav id="nav-bar">
   <img class="logo" src="/images/logo.jpg" >
   <span class="header">Card Game</span>
-    <% if(user  === null) { %>
-    <a href = "/login"> Login </a>
+    <% if(userNameTopBar  === null) { %>
+    <form method='GET' action='/'>
+      <button type='submit' class="btn btn-info logout"> login</button>
+    </form>
     <% } else{ %>
   <form method="POST" action="/logout">
 
     <button type="submit" class="btn btn-info logout"> Logout</button>
 
-    <span class="label label-info"><%= user %></span>
+    <a href='/user/<%= userIdTopBar %>' class="label label-info"><%= userNameTopBar %></a>
 
 
   </form>

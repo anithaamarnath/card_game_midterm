@@ -53,8 +53,12 @@ app.get("/", (req, res) => {
 
 app.get("/match/:gameId", (req, res) => {
   let templateVars = {}
+  templateVars.userNameTopBar = null
   if (req.session.user_id){
-    templateVars.user_cookie_id = req.session.user_id
+    knex.from('users').select('name', 'id').where('id', req.session.user_id).asCallback(function(errr, username){
+      templateVars.userNameTopBar = username[0].name
+      templateVars.userIdTopBar = username[0].id
+    })
   }
   knex('matches')
     .select('u1.name as name1','u2.name as name2', 'u1.ranking as ranking1', 'u2.ranking as ranking2', 'player1_points', 'player2_points', 'player1_id', 'player2_id', 'game_state_id')
@@ -311,12 +315,6 @@ app.get("/match/:gameId", (req, res) => {
   })
 })
 
-app.get("/finish_test", (req, res) => {
-  let templateVars = {}
-  templateVars.user = 'test'
-  res.render('finished_match', templateVars)
-})
-
 
 //-------------------------------------------------------------------------
 
@@ -554,11 +552,18 @@ function generateRandomString () {
 
 //--------------------------------------------------------------------------
 
+
+
 app.get("/user/:userid", (req, res) => {
   const userid = req.params.userid;
   let session = 'Anonymous';
+  let userNameTopBar = null;
+  let userIdTopBar = null;
   if (req.session.user_id){
-    console.log("req.session.user_id");
+    knex.from('users').select('name', 'id').where('id', req.session.user_id).asCallback(function(err, username){
+      userNameTopBar = username[0].name
+      userIdTopBar = username[0].id
+    })
     session = req.session.user_id;
     }
 
@@ -567,14 +572,14 @@ app.get("/user/:userid", (req, res) => {
     if (data.length != 0){
       let user = userInformation(userid, data[0]);
       console.log(user);
-      let templateVars = {data: data, user: user.userName, userRank: user.userRank, userid: user.userid, session: session};
+      let templateVars = {data: data, user: user.userName, userRank: user.userRank, userid: user.userid, session: session, userNameTopBar: userNameTopBar, userIdTopBar: userIdTopBar};
       res.render("user_id",templateVars);
     }
     else {
       knex('users').select('name', 'ranking').where('id', userid).asCallback(function(err, info){
         console.log(info)
         if (info.length != 0){ // user in database
-          let templateVars = {'user': info[0].name, 'userRank': info[0].ranking, data: data, userid: userid, session: session}
+          let templateVars = {'user': info[0].name, 'userRank': info[0].ranking, data: data, userid: userid, session: session, userNameTopBar: userNameTopBar, userIdTopBar: userIdTopBar}
           console.log('test', data)
           res.render("user_id",templateVars);
         }else {//user not in database
@@ -600,14 +605,23 @@ function userInformation(userid, row){
 //------------------------------------------------------
 
 app.get("/user", (req, res) => {
-  knexQueries.usersRankingGoofspiel(function(data){
-    let user = 'Anonymous';
-    if(req.session.user_id){
-      user = req.session.user_id;
-    }
-    let templateVars = {data: data, user: user};
-    res.render("user",templateVars);
-  });
+  let user = null;
+  if (req.session.user_id){
+    knex.from('users').select('name', 'id').where('id', req.session.user_id).asCallback(function(errr, username){
+      user = username[0].name
+      let id = username[0].id
+      knexQueries.usersRankingGoofspiel(function(data){
+        let templateVars = {data: data, userNameTopBar: user, userIdTopBar: id};
+        res.render("user",templateVars);
+      })
+    });
+  }
+  else {
+    knexQueries.usersRankingGoofspiel(function(data){
+      let templateVars = {data: data, userNameTopBar: user, userIdTopBar: null};
+      res.render("user",templateVars);
+    });
+  }
 });
 
 
