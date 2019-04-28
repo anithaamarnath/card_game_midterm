@@ -30,7 +30,7 @@
                   <% let state = 'PLAY' %>
                   <% if(userid == data[key].id1) { %>
                     <% opponent = data[key].name2 %>
-                    <% if (data[key].game_state_id == 2) {%>
+                    <% if (data[key].game_state_id == 2 || !opponent) {%>
                        <% state = 'WAIT' %>
                       <% } %>
                   <%}else {%>
@@ -74,7 +74,7 @@
       <% } %>
       <%#if(userid == session) {%>
 
-        <div class="col-md-4 pull-right ">
+        <div class="col-md-4 pull-right">
 
             <h3>New Game</h3>
             <form method="POST" action="/newgame">
