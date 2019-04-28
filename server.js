@@ -157,7 +157,7 @@ app.get("/match/:gameId", (req, res) => {
 //-------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+
 app.post("/login", (req, res) => {
   knex('users').select('id').where({'name': req.body.user}).asCallback(function(err, output){
     if (output){
@@ -180,7 +180,12 @@ app.post("/login", (req, res) => {
   // })
   // console.log(`user_id${req.session.user_id}`)
 
+<<<<<<< HEAD
 //-----------------------------------------------------------------------------
+=======
+})
+
+>>>>>>> feature_frontend
 app.post("/newgame", (req, res) => {
   knex.select('id').from('matches').whereNot('player1_id', req.session.user_id).andWhere('player2_id', null).asCallback(function(err, number){
     if (!number[0]) {
@@ -208,7 +213,7 @@ app.post("/newgame", (req, res) => {
     }
   })
 })
-//------------------------------------------------------------------------------------
+
 function dealHands (matchId){
   knex('card_lookup').select('id', 'suit').asCallback(function(err,cards){
     let position = '1'
@@ -353,6 +358,7 @@ function generateRandomString () {
 
 
 //--------------------------------------------------------------------------
+<<<<<<< HEAD
 app.get("/user/:userid", (req, res) => {
   const userid = req.params.userid;
     knexQueries.matchesForUser(userid,function (data) {
@@ -388,6 +394,18 @@ app.get("/user", (req, res) => {
     res.render("user",templateVars);
   });
 });
+=======
+// app.get("/user/:userid", (req, res) => {
+//   const userid = req.params.userid;
+//     //res.send(userid);
+//     knexQueries.matchesForUser(userid,function (data) {
+//           console.log(data);
+//           let templateVars = {data: data, userid: userid, };
+//           res.render("user_id",templateVars);
+
+//     });
+// });
+>>>>>>> feature_frontend
 
 //-------------------------------------------------------
 
