@@ -79,17 +79,26 @@ html, body {
 }
 
 .player_hand .face_up {
-   margin-left: .2em;
+  margin-left: .2em;
 }
 
 .opponent_hand .face_down {
   margin-left: .5em;
+  display: flex;
+  align-items: flex-end;
 }
+
+.opponent_hand .card_img {
+  width: 80px;
+  height: 112px;
+
+}
+
 
 .face_down {
   height: 100px;
   width: 5vw;
-  background-color: brown;
+  /*background-color: brown;*/
 }
 
 .bid {
@@ -142,6 +151,15 @@ button {
   height: 140px;
 }
 
+.last_turn {
+  display: flex;
+  flex-direction: column;
+}
+
+.last {
+  transform: rotate(90deg);
+  margin: .25em;
+}
 
 
 
