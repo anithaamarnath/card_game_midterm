@@ -486,7 +486,7 @@ app.get("/user", (req, res) => {
     if(req.session.user_id){
       user = req.session.user_id;
     }
-    let templateVars = {data: data, user: req.session.user_id};
+    let templateVars = {data: data, user: user};
     res.render("user",templateVars);
   });
 });
