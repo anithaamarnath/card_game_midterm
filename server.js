@@ -344,20 +344,9 @@ app.post("/login", (req, res) => {
   // })
   // console.log(`user_id${req.session.user_id}`)
 
-<<<<<<< HEAD
-// <<<<<<< HEAD
-// //-----------------------------------------------------------------------------
-// =======
-// })
-
-
-=======
 
 //-----------------------------------------------------------------------------
 
-
-
->>>>>>> 4dbd3dad04606cfdb8b900ed47d4a36fbc5d43ca
 app.post("/newgame", (req, res) => {
   knex.select('id').from('matches').whereNot('player1_id', req.session.user_id).andWhere('player2_id', null).asCallback(function(err, number){
     if (!number[0]) {
