@@ -344,12 +344,11 @@ app.post("/login", (req, res) => {
   // })
   // console.log(`user_id${req.session.user_id}`)
 
-<<<<<<< HEAD
-//-----------------------------------------------------------------------------
-=======
-})
 
->>>>>>> feature_frontend
+//-----------------------------------------------------------------------------
+
+
+
 app.post("/newgame", (req, res) => {
   knex.select('id').from('matches').whereNot('player1_id', req.session.user_id).andWhere('player2_id', null).asCallback(function(err, number){
     if (!number[0]) {
@@ -552,7 +551,7 @@ function generateRandomString () {
 
 
 //--------------------------------------------------------------------------
-<<<<<<< HEAD
+
 app.get("/user/:userid", (req, res) => {
   const userid = req.params.userid;
     knexQueries.matchesForUser(userid,function (data) {
@@ -598,7 +597,7 @@ app.get("/user", (req, res) => {
     res.render("user",templateVars);
   });
 });
-=======
+
 // app.get("/user/:userid", (req, res) => {
 //   const userid = req.params.userid;
 //     //res.send(userid);
@@ -609,7 +608,7 @@ app.get("/user", (req, res) => {
 
 //     });
 // });
->>>>>>> feature_frontend
+
 
 //-------------------------------------------------------
 
