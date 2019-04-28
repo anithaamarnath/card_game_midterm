@@ -160,7 +160,7 @@ app.get("/match/:gameId", (req, res) => {
 //-----------------------------------------------------------------------------
 app.post("/login", (req, res) => {
   knex('users').select('id').where({'name': req.body.user}).asCallback(function(err, output){
-    if (output){
+    if (output[0]){
       req.session.user_id = output[0].id
       res.redirect(`/user/${req.session.user_id}`)
     }
@@ -327,9 +327,33 @@ function awardPoints (winner, prize, matchId) {
 
 
 function newPrize (matchId, res) {
+  let player1_rank_update = 0
+  let player2_rank_update = 0
   knex('cards').select('card_id').where({'match_id': matchId}).andWhere({'position_id': '3'}).asCallback(function(err, cards){
     if (cards.length === 0 ) {
       knex('matches').where({'id': matchId}).update({'game_state_id': '4'}).asCallback(function(err){         //gameover
+        knex('matches').where({'id': matchId}).select('player1_points', 'player2_points', 'player1_id', 'player2_id').asCallback(function(err, points){
+          knex('users').where({'id': points[0].player1_id}).select('rank').asCallback(function(err, rank1){
+            knex('users').where({'id': points[0].player2_id}).select('rank').asCallback(function(err, rank2){
+              if (points[0].player1_points > points[0].player2_points) {
+                player1_rank_update = 10 - (rank1[0].rank / 100) + (rank2[0].rank / 100)
+                player2_rank_update = - player1_rank_update
+              }
+              else if (points[0].player1_points < points[0].player2_points) {
+                player2_rank_update = 10 - (rank2[0].rank / 100) + (rank1[0].rank / 100)
+                player1_rank_update = - player2_rank_update
+              } else {
+                player1_rank_update = - (rank1[0].rank / 100) + (rank2[0].rank / 100)
+                player2_rank_update = - (rank2[0].rank / 100) + (rank1[0].rank / 100)
+              }
+              const player1_new_rank = player1_rank_update + rank1[0].rank
+              const player2_new_rank = player2_rank_update + rank2[0].rank
+              knex('users').where({'id': points[0].player1_id}).update({'rank': player1_new_rank}).asCallback(function(err){
+                knex('users').where({'id': points[0].player2_id}).update({'rank': player2_new_rank}).asCallback(function(err){})
+              })
+            })
+          })
+        })
         res.redirect(`/match/${matchId}`)
       })
     } else {
@@ -357,7 +381,7 @@ app.get("/user/:userid", (req, res) => {
   const userid = req.params.userid;
     knexQueries.matchesForUser(userid,function (data) {
           console.log(data);
-          let user = userInformation(userid, data[0]);
+          // let user = userInformation(userid, data[0]);
           console.log(user);
           let templateVars = {data: data, user: user.userName, userRank: user.userRank, userid: user.userid};
           res.render("user_id",templateVars);
