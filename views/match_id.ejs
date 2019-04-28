@@ -43,7 +43,7 @@
         <div class='prize card'>
           <% if (prize) { %>
               <article class='face_up bid'>
-                <p><%= prize %>
+                <img src="/images/<%= prize %>D.png" alt='<%= prize %>' class='card_img'>
               </article>
             <% } %>
         </div>
@@ -57,7 +57,7 @@
           <div class ='player_bid card'>
             <% if (player_bid) { %>
               <article class='face_up bid'>
-                <p><%= player_bid %>
+                <img src="/images/<%= player_bid %>H.png" alt='<%= player_bid %>' class='card_img'>
               </article>
             <% } %>
           </div>

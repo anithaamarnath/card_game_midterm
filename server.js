@@ -47,7 +47,7 @@ app.use("/api/users", usersRoutes(knex));
 
 // Home page
 app.get("/", (req, res) => {
-  res.render("test");
+  res.render("index");
 });
 
 
@@ -159,19 +159,27 @@ app.get("/match/:gameId", (req, res) => {
 
 //-----------------------------------------------------------------------------
 app.post("/login", (req, res) => {
-  knex('users').returning('id').insert({'name': req.body.user_id}).asCallback(function(err, output){
-    if (err){
-      console.log(err)
+  knex('users').select('id').where({'name': req.body.user}).asCallback(function(err, output){
+    if (output){
+      req.session.user_id = output[0].id
+      res.redirect(`/user/${req.session.user_id}`)
     }
-    req.session.user_id = output[0]
-    res.redirect("/")
+    else {
+      knex('users').returning('id').insert({'name': req.body.user, 'ranking': 1000}).asCallback(function(err, newId){
+        if (err){
+          console.log(err)
+        }
+        req.session.user_id = newId[0]
+        res.redirect(`/user/${req.session.user_id}`)
+      })
+    }
   })
+})
   // req.session.user_id = knex('users').select('id').where({'name': req.body.user_id}).then(function(err, rows){
   //   console.log(`return ${rows[0].id} return`)
   // })
   // console.log(`user_id${req.session.user_id}`)
 
-})
 //-----------------------------------------------------------------------------
 app.post("/newgame", (req, res) => {
   knex.select('id').from('matches').whereNot('player1_id', req.session.user_id).andWhere('player2_id', null).asCallback(function(err, number){
