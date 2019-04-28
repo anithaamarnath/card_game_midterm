@@ -5,10 +5,14 @@
     <a href = "/login"> Login </a>
     <% } else{ %>
   <form method="POST" action="/logout">
-    <a href="/" class="btn btn-info " role="button">Logout</a>
+
+    <button type="submit" class="btn btn-info logout"> Logout</button>
+
     <span class="label label-info"><%= user %></span>
 
+
   </form>
+
 </nav>
     <% } %>
 
