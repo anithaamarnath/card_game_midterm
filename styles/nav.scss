@@ -7,6 +7,8 @@
   top: 0;
   position: fixed;
 
+
+
   }
 #nav-bar .logo{
   padding: 2em,0px;
@@ -21,7 +23,16 @@
   line-height: 1.5em;
 
 }
-.btn{
+.btn {
+  float: right;
+  padding: 15px;
+  margin: 15px;
+  border-radius: 5px;
+  color:white;
+
+
+}
+.label {
   float: right;
   padding: 15px;
   margin: 15px;

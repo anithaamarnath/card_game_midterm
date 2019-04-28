@@ -345,10 +345,6 @@ app.post("/login", (req, res) => {
   // console.log(`user_id${req.session.user_id}`)
 
 
-//-----------------------------------------------------------------------------
-
-
-
 app.post("/newgame", (req, res) => {
   knex.select('id').from('matches').whereNot('player1_id', req.session.user_id).andWhere('player2_id', null).asCallback(function(err, number){
     if (!number[0]) {
@@ -560,22 +556,32 @@ function generateRandomString () {
 
 app.get("/user/:userid", (req, res) => {
   const userid = req.params.userid;
-    knexQueries.matchesForUser(userid,function (data) {
-          console.log(data);
-          if (data.length != 0){
-            let user = userInformation(userid, data[0]);
-            console.log(user);
-            let templateVars = {data: data, user: user.userName, userRank: user.userRank, userid: user.userid};
-            res.render("user_id",templateVars);
-          }
-          else {
-            knex('users').select('name', 'ranking').where('id', req.session.user_id).asCallback(function(err, info){
-              console.log(info)
-              let templateVars = {'user': info[0].name, 'userRank': info[0].ranking, data: data}
-              console.log('test', data)
-              res.render("user_id",templateVars);
-            })
-          }
+  let session = 'Anonymous';
+  if (req.session.user_id){
+    console.log("req.session.user_id");
+    session = req.session.user_id;
+    }
+
+  knexQueries.matchesForUser(userid,function (data) {
+    console.log(data);
+    if (data.length != 0){
+      let user = userInformation(userid, data[0]);
+      console.log(user);
+      let templateVars = {data: data, user: user.userName, userRank: user.userRank, userid: user.userid, session: session};
+      res.render("user_id",templateVars);
+    }
+    else {
+      knex('users').select('name', 'ranking').where('id', userid).asCallback(function(err, info){
+        console.log(info)
+        if (info.length != 0){ // user in database
+          let templateVars = {'user': info[0].name, 'userRank': info[0].ranking, data: data, userid: userid, session: session}
+          console.log('test', data)
+          res.render("user_id",templateVars);
+        }else {//user not in database
+          res.send("This user does not exist");
+        }
+      })
+    }
 
     });
 });
@@ -599,24 +605,19 @@ app.get("/user", (req, res) => {
     if(req.session.user_id){
       user = req.session.user_id;
     }
-    let templateVars = {data: data, user: req.session.user_id};
+    let templateVars = {data: data, user: user};
     res.render("user",templateVars);
   });
 });
 
-// app.get("/user/:userid", (req, res) => {
-//   const userid = req.params.userid;
-//     //res.send(userid);
-//     knexQueries.matchesForUser(userid,function (data) {
-//           console.log(data);
-//           let templateVars = {data: data, userid: userid, };
-//           res.render("user_id",templateVars);
-
-//     });
-// });
 
 
 //-------------------------------------------------------
+app.post("/logout",  (req, res) =>{
+
+  req.session.user_id = null;
+  res.redirect('/');
+});
 
 
 app.listen(PORT, '0.0.0.0', () => {
