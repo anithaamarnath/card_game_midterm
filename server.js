@@ -242,12 +242,6 @@ app.post("/login", (req, res) => {
   // })
   // console.log(`user_id${req.session.user_id}`)
 
-<<<<<<< HEAD
-//-----------------------------------------------------------------------------
-=======
-})
-
->>>>>>> feature_frontend
 app.post("/newgame", (req, res) => {
   knex.select('id').from('matches').whereNot('player1_id', req.session.user_id).andWhere('player2_id', null).asCallback(function(err, number){
     if (!number[0]) {
