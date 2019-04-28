@@ -26,6 +26,7 @@
         <div class='opponent_hand'>
           <% for (i = 0; i < opponent_hand_size; i++) { %>
             <article class='face_down bid'>
+              <img src="/images/0H.png" class='card_img'>
             </article>
           <% } %>
         </div>
@@ -37,6 +38,7 @@
         <div class='deck card'>
           <% if (cards_left_deck) { %>
               <article class='face_down bid'>
+                <img src="/images/0H.png" class='card_img'>
               </article>
             <% } %>
         </div>
@@ -51,6 +53,7 @@
           <div class='opponent_bid card'>
             <% if (opponent_bid) { %>
               <article class='face_down bid'>
+                <img src="/images/0H.png" class='card_img'>
               </article>
             <% } %>
           </div>
@@ -62,6 +65,19 @@
             <% } %>
           </div>
         </div>
+        <div class='last_turn'>
+            <% if (last_prize) { %>
+              <article class ='face_up last'>
+                <img src="/images/<%= opponent_last_card %>S.png" alt='<%= opponent_last_card %>' class='card_img'>
+              </article>
+              <article class ='face_up last'>
+                <img src="/images/<%= last_prize %>D.png" alt='<%= last_prize %>' class='card_img'>
+              </article>
+              <article class ='face_up last'>
+                <img src="/images/<%= player_last_card %>H.png" alt='<%= player_last_card %>' class='card_img'>
+              </article>
+            <% } %>
+          </div>
      </div>
      <div class='player'>
       <h3 class='points'> Score: <%= player_points %></h3>
