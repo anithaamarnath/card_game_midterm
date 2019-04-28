@@ -63,12 +63,16 @@
                 <%if(points_opponent > points_user) {%>
                   <%result = 'LOST'%>
                 <%}%>
-                  <div class="p-2 <%= resultClass[result]%>"> Goofspiel vs <%= opponent %> - <%= result %></div>
+
+                  <div class="p-2 <%= resultClass[result]%>">
+                  <a class ="alert-link" href="/match/<%= data[key].id%> ">  Goofspiel vs <%= opponent %></a> - <%= result %></div>
+
               <% } %>
           <% }; %>
 
       </div>
       <% } %>
+      <%#if(userid == session) {%>
 
         <div class="col-md-4 pull-right ">
 
@@ -81,6 +85,8 @@
             <button type="button" class="btn btn-info btn-lg btn-block btn-sm">Solitaire - Your Rank: 0</button>
             <button type="button" class="btn btn-info btn-lg btn-block btn-sm">Poker 0</button>
         </div>
+
+      <%#}%>
 
 
 
