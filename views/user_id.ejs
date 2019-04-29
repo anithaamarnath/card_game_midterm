@@ -25,7 +25,7 @@
     <div class="row">
 <% if (data.length != 0) { %>
       <div class="col-md-4">
-        <h3>Active Games</h3> <br>
+        <h3><%=user%>'s Active Games</h3> <br>
           <% const stateClass = {PLAY: 'alert alert-success alert-dismissible fade show text-success', WAIT: 'alert alert-warning alert-dismissible fade show text-warning'}%>
           <% for(let key in data){ %>
               <% if(data[key].game_state_id != 4) {%>
@@ -53,7 +53,7 @@
           <% } %>
         </div>
       <div class="col-md-4">
-        <h3>Archived Games</h3> <br>
+        <h3><%=user%>'s Archived Games</h3> <br>
         <% const resultClass = { 'WIN' : 'alert alert-primary', 'LOST' :'alert alert-dark'} %>
 
         <% const classWin=['alert alert-secondary', 'alert alert-dark'] %>
