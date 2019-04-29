@@ -4,14 +4,14 @@
     <% if(userNameTopBar  === null) { %>
     <form method='GET' action='/'>
       <button type='submit' class="btn btn-info logout"> login</button>
+    <a href='/user' class="label label-info">Goofspiel Ranking</a>
     </form>
     <% } else{ %>
   <form method="POST" action="/logout">
-
     <button type="submit" class="btn btn-info logout"> Logout</button>
 
     <a href='/user/<%= userIdTopBar %>' class="label label-info"><%= userNameTopBar %> - <%= rankingTopBar %></a>
-
+    <a href='/user' class="label label-info">Goofspiel Ranking</a>
 
   </form>
 
