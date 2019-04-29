@@ -38,9 +38,14 @@
                     <% state = 'WAIT' %>
                   <% } %>
                 <% } %>%>
+                <%  if(!opponent) { %>
+                  <div class="p-2 mr-2 <%= stateClass[state]%>" >
+                     <span class="text-dark font-weight-bold"> Goofspiel vs ----------  </span>WAIT</div>
+                  <%} else {%>
                 <div class="p-2 mr-2 <%= stateClass[state]%>" >
                     <a class ="alert-link" href="/match/<%= data[key].id%> ">  Goofspiel vs <%= opponent %></a> - <%= state%>
                 </div>
+                <%}%>
               <%}%>
           <% } %>
         </div>
