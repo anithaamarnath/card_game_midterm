@@ -563,33 +563,56 @@ app.get("/user/:userid", (req, res) => {
     knex.from('users').select('name', 'id').where('id', req.session.user_id).asCallback(function(err, username){
       userNameTopBar = username[0].name
       userIdTopBar = username[0].id
-    })
-    session = req.session.user_id;
-    }
-
-  knexQueries.matchesForUser(userid,function (data) {
-    console.log(data);
-    if (data.length != 0){
-      let user = userInformation(userid, data[0]);
-      console.log(user);
-      let templateVars = {data: data, user: user.userName, userRank: user.userRank, userid: user.userid, session: session, userNameTopBar: userNameTopBar, userIdTopBar: userIdTopBar};
-      res.render("user_id",templateVars);
-    }
-    else {
-      knex('users').select('name', 'ranking').where('id', userid).asCallback(function(err, info){
-        console.log(info)
-        if (info.length != 0){ // user in database
-          let templateVars = {'user': info[0].name, 'userRank': info[0].ranking, data: data, userid: userid, session: session, userNameTopBar: userNameTopBar, userIdTopBar: userIdTopBar}
-          console.log('test', data)
+      session = req.session.user_id;
+      knexQueries.matchesForUser(userid,function (data) {
+        console.log(data);
+        if (data.length != 0){
+          let user = userInformation(userid, data[0]);
+          console.log(user);
+          let templateVars = {data: data, user: user.userName, userRank: user.userRank, userid: user.userid, session: session, userNameTopBar: userNameTopBar, userIdTopBar: userIdTopBar};
           res.render("user_id",templateVars);
-        }else {//user not in database
-          res.send("This user does not exist");
+        }
+        else {
+          knex('users').select('name', 'ranking').where('id', userid).asCallback(function(err, info){
+            console.log(info)
+            if (info.length != 0){ // user in database
+              let templateVars = {'user': info[0].name, 'userRank': info[0].ranking, data: data, userid: userid, session: session, userNameTopBar: userNameTopBar, userIdTopBar: userIdTopBar}
+              console.log('test', data)
+              res.render("user_id",templateVars);
+            }else {//user not in database
+              res.send("This user does not exist");
+            }
+          })
         }
       })
-    }
-
+    })
+  }
+  else{
+    knexQueries.matchesForUser(userid,function (data) {
+      console.log(data);
+      if (data.length != 0){
+        let user = userInformation(userid, data[0]);
+        console.log(user);
+        let templateVars = {data: data, user: user.userName, userRank: user.userRank, userid: user.userid, session: session, userNameTopBar: userNameTopBar, userIdTopBar: userIdTopBar};
+        res.render("user_id",templateVars);
+      }
+      else {
+        knex('users').select('name', 'ranking').where('id', userid).asCallback(function(err, info){
+          console.log(info)
+          if (info.length != 0){ // user in database
+            let templateVars = {'user': info[0].name, 'userRank': info[0].ranking, data: data, userid: userid, session: session, userNameTopBar: userNameTopBar, userIdTopBar: userIdTopBar}
+            console.log('test', data)
+            res.render("user_id",templateVars);
+          }else {//user not in database
+            res.send("This user does not exist");
+          }
+        })
+      }
     });
+  }
 });
+
+
 //--------------------------------------------------
 function userInformation(userid, row){
   let userName = row.name1;

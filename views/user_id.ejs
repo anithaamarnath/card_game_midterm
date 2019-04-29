@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="/styles/nav.css" type="text/css" />
     <link rel="stylesheet" href="/styles/form_body.css" type="text/css" />
      <link rel="stylesheet" href="/styles/body.css" type="text/css" />
+     <link rel='stylesheet' href='/styles/user_id.css' type='text/css' />
+
+
     <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
     <script type="text/javascript" src="/scripts/app.js"></script>
 
@@ -71,10 +74,15 @@
           <% }; %>
 
       </div>
+      <% } else { %>
+      <div class="col-md-8">
+        <h2>Click New Game to start playing</h2>
+      </div>
       <% } %>
-      <%#if(userid == session) {%>
 
-        <div class="col-md-4 pull-right">
+      <% if(userid == session) {%>
+
+        <div class="col-md-4 ">
 
             <h3>New Game</h3>
             <form method="POST" action="/newgame">
@@ -86,7 +94,7 @@
             <button type="button" class="btn btn-info btn-lg btn-block btn-sm">Poker 0</button>
         </div>
 
-      <%#}%>
+      <% }%>
 
 
 
