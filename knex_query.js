@@ -107,10 +107,10 @@ module.exports.matchesForUser = function (user_id, cb){
       'u1.id as id1','u2.id as id2','matches.player1_points','matches.player2_points',
       'u1.ranking as rank1','u2.ranking as rank2')
     .from('matches')
-    .innerJoin('users as u1', function() {
+    .leftOuterJoin('users as u1', function() {
       this.on('u1.id','=','matches.player1_id')
     })
-    .innerJoin('users as u2', function() {
+    .leftOuterJoin('users as u2', function() {
       this.on('u2.id','=','matches.player2_id')
     })
     .where(function(){
