@@ -1,4 +1,7 @@
 # Node Skeletonls
+A web app that allows players to play various card games against other players. Our Team Project is Goofspeil Card Game.
+
+
 
 ## Project Setup
 
@@ -23,7 +26,47 @@
 7. Run the server: `npm run local`
 8. Visit `http://localhost:8080/`
 
+## Requirements of the Project
+
+  -The app can support multiple types of card games
+  -Player can create a new game of a certain type (and get randomly paired with another player)
+  -Player can play a game against another player (one move at a time)
+  -Player can have multiple active games going
+  -Player can see in which of their games is their turn
+  -Player can see players rankings per game type (by number of wins)
+  -Player can see archive of games played by each player
+
+
+
 ## Dependencies
 
-- Node 5.10.x or above
-- NPM 3.8.x or above
+
+
+- body-parser: 1.15.2
+- cookie:  0.3.1
+- cookie-session 1.3.3
+- dotenv  2.0.0
+- ejs 2.4.1
+- express 4.13.4
+- knex 0.11.7
+- knex-logger 0.1.0
+- morgan 1.7.0
+- node-sass-middleware 0.9.8
+- pg 6.0.2
+- nodemon 1.18.11
+- Node 5.10
+- NPM 3.8
+
+## Final Product
+
+!["Screenshot of login page"]()
+!["Screenshot of User Profile"]()
+!["Screenshot of Match Page"]()
+!["Screenshot of Ranking Page"]()
+
+
+
+
+
+
+
