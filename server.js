@@ -596,14 +596,14 @@ app.get("/user/:userid", (req, res) => {
       if (data.length != 0){
         let user = userInformation(userid, data[0]);
         console.log(user);
-        let templateVars = {data: data, user: user.userName, userRank: user.userRank, userid: user.userid, session: session, userNameTopBar: userNameTopBar, userIdTopBar: userIdTopBar};
+        let templateVars = {data: data, user: user.userName, userRank: user.userRank, userid: user.userid, session: session, userNameTopBar: userNameTopBar, userIdTopBar: userIdTopBar, rankingTopBar: rankingTopBar};
         res.render("user_id",templateVars);
       }
       else {
         knex('users').select('name', 'ranking').where('id', userid).asCallback(function(err, info){
           console.log(info)
           if (info.length != 0){ // user in database
-            let templateVars = {'user': info[0].name, 'userRank': info[0].ranking, data: data, userid: userid, session: session, userNameTopBar: userNameTopBar, userIdTopBar: userIdTopBar}
+            let templateVars = {'user': info[0].name, 'userRank': info[0].ranking, data: data, userid: userid, session: session, userNameTopBar: userNameTopBar, userIdTopBar: userIdTopBar, rankingTopBar: rankingTopBar}
             console.log('test', data)
             res.render("user_id",templateVars);
           }else {//user not in database
