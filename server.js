@@ -55,9 +55,10 @@ app.get("/match/:gameId", (req, res) => {
   let templateVars = {}
   templateVars.userNameTopBar = null
   if (req.session.user_id){
-    knex.from('users').select('name', 'id').where('id', req.session.user_id).asCallback(function(errr, username){
+    knex.from('users').select('name', 'id', 'ranking').where('id', req.session.user_id).asCallback(function(errr, username){
       templateVars.userNameTopBar = username[0].name
       templateVars.userIdTopBar = username[0].id
+      templateVars.rankingTopBar = username[0].ranking
     })
   }
   knex('matches')
@@ -559,24 +560,26 @@ app.get("/user/:userid", (req, res) => {
   let session = 'Anonymous';
   let userNameTopBar = null;
   let userIdTopBar = null;
+  let rankingTopBar = null;
   if (req.session.user_id){
-    knex.from('users').select('name', 'id').where('id', req.session.user_id).asCallback(function(err, username){
+    knex.from('users').select('name', 'id', 'ranking').where('id', req.session.user_id).asCallback(function(err, username){
       userNameTopBar = username[0].name
       userIdTopBar = username[0].id
+      rankingTopBar = username[0].ranking
       session = req.session.user_id;
       knexQueries.matchesForUser(userid,function (data) {
         console.log(data);
         if (data.length != 0){
           let user = userInformation(userid, data[0]);
           console.log(user);
-          let templateVars = {data: data, user: user.userName, userRank: user.userRank, userid: user.userid, session: session, userNameTopBar: userNameTopBar, userIdTopBar: userIdTopBar};
+          let templateVars = {data: data, user: user.userName, userRank: user.userRank, userid: user.userid, session: session, userNameTopBar: userNameTopBar, userIdTopBar: userIdTopBar, rankingTopBar: rankingTopBar};
           res.render("user_id",templateVars);
         }
         else {
           knex('users').select('name', 'ranking').where('id', userid).asCallback(function(err, info){
             console.log(info)
             if (info.length != 0){ // user in database
-              let templateVars = {'user': info[0].name, 'userRank': info[0].ranking, data: data, userid: userid, session: session, userNameTopBar: userNameTopBar, userIdTopBar: userIdTopBar}
+              let templateVars = {'user': info[0].name, 'userRank': info[0].ranking, data: data, userid: userid, session: session, userNameTopBar: userNameTopBar, userIdTopBar: userIdTopBar, rankingTopBar: rankingTopBar}
               console.log('test', data)
               res.render("user_id",templateVars);
             }else {//user not in database
@@ -630,18 +633,19 @@ function userInformation(userid, row){
 app.get("/user", (req, res) => {
   let user = null;
   if (req.session.user_id){
-    knex.from('users').select('name', 'id').where('id', req.session.user_id).asCallback(function(errr, username){
+    knex.from('users').select('name', 'id', 'ranking').where('id', req.session.user_id).asCallback(function(err, username){
       user = username[0].name
       let id = username[0].id
+      let rankingTopBar = username[0].ranking
       knexQueries.usersRankingGoofspiel(function(data){
-        let templateVars = {data: data, userNameTopBar: user, userIdTopBar: id};
+        let templateVars = {data: data, userNameTopBar: user, userIdTopBar: id, rankingTopBar: rankingTopBar};
         res.render("user",templateVars);
       })
     });
   }
   else {
     knexQueries.usersRankingGoofspiel(function(data){
-      let templateVars = {data: data, userNameTopBar: user, userIdTopBar: null};
+      let templateVars = {data: data, userNameTopBar: user, userIdTopBar: null, rankingTopBar: null};
       res.render("user",templateVars);
     });
   }
