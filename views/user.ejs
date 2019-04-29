@@ -21,19 +21,13 @@
   <div class="container p-5 mt-5">
     <div class="row justify-content-center">
       <div class="col-md-8 ">
-        <h3 class = "text-center">Goofspiel Users Ranking</h3> <br>
-            <% for(let key in data){ %>
-
+        <p class = "text-center h2">Goofspiel Users Ranking</p> <br>
+          <% for(let key in data){ %>
             <div class="p-2 alert alert-primary row justify-content-center">
-            <a class ="alert-link" href="/user/<%= data[key].id%> "><%= data[key].name %> - <%= data[key].ranking %></div>
-
-
-            <% }; %>
-      </div>
-
-
-
-
+              <a class ="alert-link h4" href="/user/<%= data[key].id%> "><%= data[key].name %> - <%= data[key].ranking %>
+            </div>
+          <% }; %>
+        </div>
       </div>
     </div>
 
