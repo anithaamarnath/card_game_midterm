@@ -41,7 +41,39 @@ div .bg-danger {
   margin: 5px ;
 }
 
+.fullscreen {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
+.login_box {
+  width: 30vw;
+  height: 150px;
+  background-color: #A9A9A9;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login_box form {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+}
+
+.login_box form button {
+  align-self: flex-end;
+}
+
+.login-register {
+  margin-top: 10px;
+  height: 40px;
+  width: 80px;
+  border-radius: 5px;
+}
 
 
 
