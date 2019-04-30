@@ -1,14 +1,10 @@
-# Node Skeletonls
+# Card Game App
+A web app that allows players to play various card games against other players. Our Team Project is Goofspeil Card Game.
 
-## Project Setup
+This app supports multiple players playing mutiple game simultaniously across a local internet connection.
 
-1. Create your own empty repo on GitHub
-2. Clone this repository (do not fork)
-  - Suggestion: When cloning, specify a different folder name that is relevant to your project
-3. Remove the git remote: `git remote rm origin`
-4. Add a remote for your origin: `git remote add origin <your github repo URL>`
-5. Push to the new origin: `git push -u origin master`
-6. Verify that the skeleton code now shows up in your repo on GitHub
+All games are saved in the database and the history of every move made can be viewed by any player
+
 
 ## Getting Started
 
@@ -20,10 +16,57 @@
   - Check the migrations folder to see what gets created in the DB
 6. Run the seed: `npm run knex seed:run`
   - Check the seeds file to see what gets seeded in the DB
+
+NOTE: seeded matches do not contain card info. attempting to view a game in progress, or an archived game, will result in an error. To see these screens you need to start a new game.
+
 7. Run the server: `npm run local`
-8. Visit `http://localhost:8080/`
+8. Visit `http://localhost:8080/`. You can also replace `localhost` with your IPv4 adress to play with other computers on your local network.
+
+
+## Requirements of the Project
+
+  -The app can support multiple types of card games
+  -Player can create a new game of a certain type (and get randomly paired with another player)
+  -Player can play a game against another player (one move at a time)
+  -Player can have multiple active games going
+  -Player can see in which of their games is their turn
+  -Player can see players rankings per game type (by number of wins)
+  -Player can see archive of games played by each player
+
+## Supporting other game types
+
+  -This app comes with one game already programmed in 'Goofspeil', but it can support other game types. When the game type is set to NULL it will run Goofspeil by default, but the code can be altered to insert as many other gametypes as possible.
+  -Use the 'position' coloumn in the 'cards' table to designate where the cards would be in the realgame counterpart (ie. 3 = deck, 1 = player1_hand, 4 = discard piles). Using this framework most card games should be able to be created.
+
 
 ## Dependencies
 
-- Node 5.10.x or above
-- NPM 3.8.x or above
+
+
+- body-parser: 1.15.2
+- cookie:  0.3.1
+- cookie-session 1.3.3
+- dotenv  2.0.0
+- ejs 2.4.1
+- express 4.13.4
+- knex 0.11.7
+- knex-logger 0.1.0
+- morgan 1.7.0
+- node-sass-middleware 0.9.8
+- pg 6.0.2
+- nodemon 1.18.11
+- Node 5.10
+- NPM 3.8
+
+## Final Product
+
+!["ProfilePages"](https://github.com/juliantomlin/card_game_midterm/blob/master/docs/profile_screens.png)
+!["InGameScreens (loggedin/loggedout"](https://github.com/juliantomlin/card_game_midterm/blob/master/docs/card_game_board.png)
+!["EndGameStats"](https://github.com/juliantomlin/card_game_midterm/blob/master/docs/endgame_stats.png)
+
+
+
+
+
+
+
