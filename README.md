@@ -1,17 +1,10 @@
 # Node Skeletonls
 A web app that allows players to play various card games against other players. Our Team Project is Goofspeil Card Game.
 
+This app supports multiple players playing mutiple game simultaniously across a local internet connection.
 
+All games are saved in the database and the history of every move made can be viewed by any player
 
-## Project Setup
-
-1. Create your own empty repo on GitHub
-2. Clone this repository (do not fork)
-  - Suggestion: When cloning, specify a different folder name that is relevant to your project
-3. Remove the git remote: `git remote rm origin`
-4. Add a remote for your origin: `git remote add origin <your github repo URL>`
-5. Push to the new origin: `git push -u origin master`
-6. Verify that the skeleton code now shows up in your repo on GitHub
 
 ## Getting Started
 
@@ -24,7 +17,7 @@ A web app that allows players to play various card games against other players. 
 6. Run the seed: `npm run knex seed:run`
   - Check the seeds file to see what gets seeded in the DB
 7. Run the server: `npm run local`
-8. Visit `http://localhost:8080/`
+8. Visit `http://localhost:8080/`. You can also replace `localhost` with your IPv4 adress to play with other computers on your local network.
 
 ## Requirements of the Project
 
@@ -36,6 +29,10 @@ A web app that allows players to play various card games against other players. 
   -Player can see players rankings per game type (by number of wins)
   -Player can see archive of games played by each player
 
+## Supporting other game types
+
+  -This app comes with one game already programmed in 'Goofspeil', but it can support other game types. When the game type is set to NULL it will run Goofspeil by default, but the code can be altered to insert as many other gametypes as possible.
+  -Use the 'position' coloumn in the 'cards' table to designate where the cards would be in the realgame counterpart (ie. 3 = deck, 1 = player1_hand, 4 = discard piles). Using this framework most card games should be able to be created.
 
 
 ## Dependencies
@@ -59,10 +56,9 @@ A web app that allows players to play various card games against other players. 
 
 ## Final Product
 
-!["Screenshot of login page"]()
-!["Screenshot of User Profile"]()
-!["Screenshot of Match Page"]()
-!["Screenshot of Ranking Page"]()
+!["ProfilePages"](https://github.com/juliantomlin/card_game_midterm/blob/master/docs/profile_screens.png)
+!["InGameScreens (loggedin/loggedout"](https://github.com/juliantomlin/card_game_midterm/blob/master/docs/card_game_board.png)
+!["EndGameStats"](https://github.com/juliantomlin/card_game_midterm/blob/master/docs/endgame_stats.png)
 
 
 
