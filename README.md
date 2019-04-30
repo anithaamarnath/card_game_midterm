@@ -1,4 +1,4 @@
-# Node Skeletonls
+# Card Game App
 A web app that allows players to play various card games against other players. Our Team Project is Goofspeil Card Game.
 
 This app supports multiple players playing mutiple game simultaniously across a local internet connection.
