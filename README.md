@@ -16,8 +16,12 @@ All games are saved in the database and the history of every move made can be vi
   - Check the migrations folder to see what gets created in the DB
 6. Run the seed: `npm run knex seed:run`
   - Check the seeds file to see what gets seeded in the DB
+
+NOTE: seeded matches do not contain card info. attempting to view a game in progress, or an archived game, will result in an error. To see these screens you need to start a new game.
+
 7. Run the server: `npm run local`
 8. Visit `http://localhost:8080/`. You can also replace `localhost` with your IPv4 adress to play with other computers on your local network.
+
 
 ## Requirements of the Project
 
